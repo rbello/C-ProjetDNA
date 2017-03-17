@@ -34,6 +34,7 @@
             this.localThreadsCountSelector = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.processingJobSelector = new System.Windows.Forms.ComboBox();
             this.processingOutputLog = new System.Windows.Forms.TextBox();
             this.processingProgressBar = new System.Windows.Forms.ProgressBar();
             this.startStopProcessingButton = new System.Windows.Forms.Button();
@@ -56,7 +57,6 @@
             this.githubSourcesLink = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.processingJobSelector = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.serverPortSelector)).BeginInit();
@@ -158,6 +158,17 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Data processing";
+            // 
+            // processingJobSelector
+            // 
+            this.processingJobSelector.Enabled = false;
+            this.processingJobSelector.FormattingEnabled = true;
+            this.processingJobSelector.Items.AddRange(new object[] {
+            "COUNT_BASES"});
+            this.processingJobSelector.Location = new System.Drawing.Point(103, 19);
+            this.processingJobSelector.Name = "processingJobSelector";
+            this.processingJobSelector.Size = new System.Drawing.Size(171, 21);
+            this.processingJobSelector.TabIndex = 5;
             // 
             // processingOutputLog
             // 
@@ -362,6 +373,7 @@
             this.githubSourcesLink.TabIndex = 2;
             this.githubSourcesLink.TabStop = true;
             this.githubSourcesLink.Text = "By R.BELLO - Get sources";
+            this.githubSourcesLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.githubSourcesLink_LinkClicked);
             // 
             // label3
             // 
@@ -380,17 +392,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(156, 268);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            // 
-            // processingJobSelector
-            // 
-            this.processingJobSelector.Enabled = false;
-            this.processingJobSelector.FormattingEnabled = true;
-            this.processingJobSelector.Items.AddRange(new object[] {
-            "COUNT_BASES"});
-            this.processingJobSelector.Location = new System.Drawing.Point(103, 19);
-            this.processingJobSelector.Name = "processingJobSelector";
-            this.processingJobSelector.Size = new System.Drawing.Size(171, 21);
-            this.processingJobSelector.TabIndex = 5;
             // 
             // Form1
             // 

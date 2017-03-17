@@ -124,5 +124,9 @@ namespace WindowsFormsApp
                 ctrl.Enabled = enabled;
         }
 
+        private void githubSourcesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/rbello/C-ProjetDNA");
+        }
     }
 }
