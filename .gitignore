@@ -45,3 +45,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+DNA-Application/WindowsFormsApp/bin/
+DNA-Application/WindowsFormsApp/obj/
+
+DNA-Application/NetworkComputeFramework/bin/
+DNA-Application/NetworkComputeFramework/obj/
+
+DNA-Application/GenomicAnalysis/bin/
+DNA-Application/GenomicAnalysis/obj/
