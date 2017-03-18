@@ -17,7 +17,7 @@ namespace GenomicAnalysis
         {
             switch (jobTypeName)
             {
-                case "COUNT_BASES": return new CountBasesJob(dataReader);
+                case "COUNT_BASES":  return new CountBasesJob(dataReader);
             }
             throw new ArgumentException(string.Format("Job type '{0}' is not supported by '{1}' application",
                 jobTypeName, GetType().Name));

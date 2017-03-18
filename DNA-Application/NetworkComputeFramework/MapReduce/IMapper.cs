@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NetworkComputeFramework.Data;
 using System.Collections.Generic;
 
 namespace NetworkComputeFramework.MapReduce
 {
-    public interface IMapper<T> : IEnumerable<T[]>
+    public interface IMapper<T> : IEnumerable<DataChunk<T>>
     {
         long DataLength { get; }
         int ChunkLength { get; }

@@ -1,4 +1,6 @@
-﻿using NetworkComputeFramework.Node;
+﻿using NetworkComputeFramework.Data;
+using NetworkComputeFramework.MapReduce;
+using NetworkComputeFramework.Node;
 using System;
 
 namespace NetworkComputeFramework.Worker
@@ -11,6 +13,6 @@ namespace NetworkComputeFramework.Worker
 
         bool Available { get; set; }
 
-        object Execute<T>(T[] t);
+        void Execute<T>(DataChunk<T> chunk, IReducer<T> reducer);
     }
 }

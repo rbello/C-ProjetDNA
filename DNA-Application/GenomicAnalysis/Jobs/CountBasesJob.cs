@@ -1,8 +1,6 @@
-﻿using System;
-using NetworkComputeFramework;
+﻿using NetworkComputeFramework;
 using NetworkComputeFramework.Data;
 using NetworkComputeFramework.MapReduce;
-using NetworkComputeFramework.Worker;
 
 namespace GenomicAnalysis.Jobs
 {
@@ -15,6 +13,19 @@ namespace GenomicAnalysis.Jobs
         public override IMapper<GenomicBase> CreateMapper(int chunkLength)
         {
             return new RegularChunkMapper<GenomicBase>(chunkLength, DataReader);
+        }
+
+        public override IReducer<GenomicBase> CreateReducer()
+        {
+            return new CountBasesReducer();
+        }
+    }
+
+    public class CountBasesReducer : IReducer<GenomicBase>
+    {
+        public void Reduce(DataChunk<GenomicBase> chunk)
+        {
+            chunk.Done = true;
         }
     }
 }

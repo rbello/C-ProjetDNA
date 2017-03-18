@@ -40,7 +40,7 @@ namespace NetworkComputeFramework.RunMode
             IDataLoader<S, T> loader = application.CreateDataLoader();
             IDataReader<T> reader = loader.Open((S) args[0]);
             // Create the job
-            Job<T> job = application.CreateJob((string)args[1], reader);
+            var job = application.CreateJob((string)args[1], reader);
             // Run the job into the workers' pool
             WorkerPool.Process(job);
         }

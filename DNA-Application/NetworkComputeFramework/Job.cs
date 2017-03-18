@@ -15,5 +15,6 @@ namespace NetworkComputeFramework
         }
 
         public abstract IMapper<T> CreateMapper(int chunkLength);
+        public abstract IReducer<T> CreateReducer();
     }
 }

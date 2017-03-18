@@ -31,7 +31,7 @@ namespace NetworkComputeFramework.Worker
             if (nodes.Contains(node))
                 throw new ArgumentException("Node allready exists in worker pool");
             nodes.Add(node);
-            WorkersCount += node.Workers.Length;
+            WorkersCount += node.Workers.Count;
             OnNodeConnected?.Invoke(node);
         }
 
@@ -64,19 +64,19 @@ namespace NetworkComputeFramework.Worker
             OnWorkerPoolMessage?.Invoke("Chunk count: " + mapper.ChunkCount, LogLevel.Info);
 
             int i = 0;
-            foreach (T[] chunk in mapper)
+            foreach (DataChunk<T> chunk in mapper)
             {
                 IWorker worker;
                 while ((worker = GetAvailableWorker()) == null) {
                     Thread.Sleep(100);
                 }
                 ++i;
-                OnWorkerPoolMessage?.Invoke("Give chunk " + i + " to " + worker + " (length: " + chunk.Length + ")", LogLevel.Debug);
+                OnWorkerPoolMessage?.Invoke("Give chunk " + i + " to " + worker + " (length: " + chunk.Data.Length + ")", LogLevel.Debug);
                 new Thread(new ParameterizedThreadStart(delegate (object id)
                 {
                     try
                     {
-                        object result = worker.Execute(chunk);
+                        worker.Execute(chunk, job.CreateReducer());
                         OnWorkerPoolMessage?.Invoke(worker + " has finished chunk" + id, LogLevel.Debug);
                     }
                     catch (Exception ex)
@@ -90,6 +90,8 @@ namespace NetworkComputeFramework.Worker
                     }
                 })).Start(i);
             }
+
+            OnWorkerPoolMessage?.Invoke("All data was distributed!", LogLevel.Info);
         }
 
         public IWorker GetAvailableWorker()

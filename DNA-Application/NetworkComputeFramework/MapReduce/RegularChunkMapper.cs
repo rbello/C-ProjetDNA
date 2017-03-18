@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using NetworkComputeFramework.Data;
-using NetworkComputeFramework.Worker;
 
 namespace NetworkComputeFramework.MapReduce
 {
@@ -29,13 +27,13 @@ namespace NetworkComputeFramework.MapReduce
 
         public int ChunkCount { get; private set; }
 
-        public IEnumerator<T[]> GetEnumerator()
+        public IEnumerator<DataChunk<T>> GetEnumerator()
         {
             for (int i = 0; i < ChunkCount; ++i)
             {
-                yield return DataSource.Next(ChunkLength);
+                yield return new DataChunk<T>(DataSource.Next(ChunkLength));
             }
-            if (ChunkRemains > 0) yield return DataSource.Next(ChunkRemains);
+            if (ChunkRemains > 0) yield return new DataChunk<T>(DataSource.Next(ChunkRemains));
         }
 
         IEnumerator IEnumerable.GetEnumerator()

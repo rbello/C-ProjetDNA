@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataChunk.cs" />
     <Compile Include="MapReduce\IMapper.cs" />
+    <Compile Include="MapReduce\IReducer.cs" />
     <Compile Include="MapReduce\RegularChunkMapper.cs" />
     <Compile Include="Worker\IWorker.cs" />
     <Compile Include="RunMode\AbstractRunMode.cs" />
