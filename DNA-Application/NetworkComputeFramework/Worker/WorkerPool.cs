@@ -15,12 +15,10 @@ namespace NetworkComputeFramework.Worker
 
         IList<INode> nodes = new List<INode>();
 
-        private int totalWorkersCount = 0;
-        private Func<IMapper> mapperFactory;
+        public int WorkersCount { get; protected set; }
 
-        public WorkerPool(Func<IMapper> mapperFactory)
+        public WorkerPool()
         {
-            this.mapperFactory = mapperFactory;
         }
 
         public void AddNode(INode node)
@@ -28,20 +26,22 @@ namespace NetworkComputeFramework.Worker
             if (nodes.Contains(node))
                 throw new ArgumentException("Node allready exists in worker pool");
             nodes.Add(node);
-            totalWorkersCount += node.Workers.Length;
+            WorkersCount += node.Workers.Length;
             OnNodeConnected?.Invoke(node);
         }
 
         public void Process<T>(Job<T> job)
         {
+            OnWorkerPoolMessage?.Invoke("Data length: " + job.DataReader.Length + " records", 1);
             // Create mapper
-            IMapper m = mapperFactory.Invoke();
-
-            long chunkSize = (long) Math.Floor((double)(job.DataReader.Length / totalWorkersCount));
-            OnWorkerPoolMessage?.Invoke("Data length: " + job.DataReader.Length, 1);
-            OnWorkerPoolMessage?.Invoke("Available workers: " + totalWorkersCount, 1);
-            OnWorkerPoolMessage?.Invoke("\ton " + nodes.Count + " node(s)", 1);
-            OnWorkerPoolMessage?.Invoke("Chunk length: " + chunkSize + " records per worker", 1);
+            IMapper <T> mapper = job.CreateMapper(this);
+            // Map data
+            mapper.Map(delegate (int number, long from, long to, long length, T[] data)
+            {
+                OnWorkerPoolMessage?.Invoke(
+                    string.Format("Chunk {0} ({1}-{2}) Length={3}", number, from, to, length)
+                    , 1);
+            });
         }
     }
 }

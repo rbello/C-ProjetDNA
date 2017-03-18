@@ -1,6 +1,8 @@
-﻿using NetworkComputeFramework;
-using System;
+﻿using System;
+using NetworkComputeFramework;
 using NetworkComputeFramework.Data;
+using NetworkComputeFramework.MapReduce;
+using NetworkComputeFramework.Worker;
 
 namespace GenomicAnalysis.Jobs
 {
@@ -8,6 +10,11 @@ namespace GenomicAnalysis.Jobs
     {
         public CountBasesJob(IDataReader<GenomicBase> dataReader) : base(dataReader)
         {
+        }
+
+        public override IMapper<GenomicBase> CreateMapper(WorkerPool workerPool)
+        {
+            return new RegularChunkMapper<GenomicBase>(workerPool, DataReader);
         }
     }
 }

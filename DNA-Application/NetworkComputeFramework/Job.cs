@@ -1,5 +1,7 @@
 ﻿using NetworkComputeFramework.Data;
 using System;
+using NetworkComputeFramework.MapReduce;
+using NetworkComputeFramework.Worker;
 
 namespace NetworkComputeFramework
 {
@@ -11,5 +13,7 @@ namespace NetworkComputeFramework
         {
             DataReader = dataReader;
         }
+
+        public abstract IMapper<T> CreateMapper(WorkerPool workerPool);
     }
 }

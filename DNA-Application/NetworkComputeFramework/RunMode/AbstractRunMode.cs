@@ -15,9 +15,9 @@ namespace NetworkComputeFramework.RunMode
 
         public WorkerPool WorkerPool { get; private set; }
  
-        public AbstractRunMode(Func<IMapper> mapperFactory)
+        public AbstractRunMode()
         {
-            WorkerPool = new WorkerPool(mapperFactory);
+            WorkerPool = new WorkerPool();
         }
 
         public void Init(Action success, Action<Exception> failure, params object[] args)

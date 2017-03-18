@@ -23,11 +23,6 @@ namespace GenomicAnalysis
                 jobTypeName, GetType().Name));
         }
 
-        public IMapper CreateMapper()
-        {
-            return new RegularChunkMapper<GenomicBase>();
-        }
-
         public string[] GetAvailableJobTypes()
         {
             return new[] {

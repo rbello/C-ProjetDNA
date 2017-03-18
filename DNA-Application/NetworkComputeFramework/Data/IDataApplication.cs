@@ -10,8 +10,6 @@ namespace NetworkComputeFramework.Data
 
         Job<T> CreateJob(string jobTypeName, IDataReader<T> dataReader);
 
-        IMapper CreateMapper();
-
         string[] GetAvailableJobTypes();
     }
 }

@@ -9,7 +9,7 @@ namespace NetworkComputeFramework.RunMode
 
         protected IDataApplication<S, T> factory;
 
-        public ServerMode(IDataApplication<S, T> factory) : base(factory.CreateMapper)
+        public ServerMode(IDataApplication<S, T> factory) : base()
         {
             this.factory = factory;
         }
