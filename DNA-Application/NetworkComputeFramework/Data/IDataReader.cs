@@ -8,5 +8,12 @@ namespace NetworkComputeFramework.Data
 {
     public interface IDataReader<T>
     {
+
+        int Length { get; }
+
+        T Next();
+
+        T[] Next(int length);
+
     }
 }

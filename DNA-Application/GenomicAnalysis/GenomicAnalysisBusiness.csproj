@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenomicAnalysisFactory.cs" />
+    <Compile Include="GenomicAnalysisApplication.cs" />
     <Compile Include="GenomicDataLoader.cs" />
     <Compile Include="GenomicBase.cs" />
     <Compile Include="GenomicDataReader.cs" />

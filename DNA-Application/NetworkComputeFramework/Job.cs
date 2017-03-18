@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetworkComputeFramework.Data;
+using System;
 
 namespace NetworkComputeFramework
 {
     public abstract class Job<T>
     {
+        public IDataReader<T> DataReader { get; protected set; }
+
+        public Job(IDataReader<T> dataReader)
+        {
+            DataReader = dataReader;
+        }
     }
 }

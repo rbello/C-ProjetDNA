@@ -1,4 +1,4 @@
-﻿using NetworkComputeFramework.Node;
+﻿using NetworkComputeFramework.Worker;
 using System;
 
 namespace NetworkComputeFramework.RunMode

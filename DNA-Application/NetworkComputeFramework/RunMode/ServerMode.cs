@@ -7,9 +7,9 @@ namespace NetworkComputeFramework.RunMode
     public class ServerMode<S, T> : AbstractRunMode
     {
 
-        protected IFactory<S, T> factory;
+        protected IDataApplication<S, T> factory;
 
-        public ServerMode(IFactory<S, T> factory) : base()
+        public ServerMode(IDataApplication<S, T> factory) : base(factory.CreateMapper)
         {
             this.factory = factory;
         }
@@ -29,7 +29,7 @@ namespace NetworkComputeFramework.RunMode
         {
             var node = new LocalNode(localThreadsCount);
             WorkerPool.AddNode(node);
-            node.Start();
+            node.Init();
         }
 
         protected override void Start(params object[] args)

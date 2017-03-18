@@ -1,28 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetworkComputeFramework.Worker;
+using System;
 
 namespace NetworkComputeFramework.Node
 {
-    public class LocalNode : Node
+    public class LocalNode : INode
     {
-        private int localThreadsCount;
 
         public LocalNode(int localThreadsCount)
         {
-            this.localThreadsCount = localThreadsCount;
+            Workers = new ThreadWorker[localThreadsCount];
+            for (int i = 0; i < localThreadsCount; ++i)
+            {
+                Workers[i] = new ThreadWorker(this, i);
+            }
         }
 
-        public void Start()
+        public IWorker[] Workers { get; protected set; }
+
+        public void Init()
         {
             
         }
 
         public override string ToString()
         {
-            return "LocalNode[127.0.0.1][" + localThreadsCount + " workers]";
+            return "LocalNode[127.0.0.1][" + Workers.Length + " workers]";
         }
     }
 }

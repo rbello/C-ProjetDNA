@@ -1,5 +1,7 @@
 ﻿using NetworkComputeFramework.Data;
+using NetworkComputeFramework.MapReduce;
 using NetworkComputeFramework.Node;
+using NetworkComputeFramework.Worker;
 using System;
 using System.Threading;
 
@@ -13,9 +15,9 @@ namespace NetworkComputeFramework.RunMode
 
         public WorkerPool WorkerPool { get; private set; }
  
-        public AbstractRunMode()
+        public AbstractRunMode(Func<IMapper> mapperFactory)
         {
-            WorkerPool = new WorkerPool();
+            WorkerPool = new WorkerPool(mapperFactory);
         }
 
         public void Init(Action success, Action<Exception> failure, params object[] args)

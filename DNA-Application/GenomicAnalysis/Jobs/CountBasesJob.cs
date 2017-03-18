@@ -6,11 +6,8 @@ namespace GenomicAnalysis.Jobs
 {
     public class CountBasesJob : Job<GenomicBase>
     {
-        private IDataReader<GenomicBase> dataReader;
-
-        public CountBasesJob(IDataReader<GenomicBase> dataReader)
+        public CountBasesJob(IDataReader<GenomicBase> dataReader) : base(dataReader)
         {
-            this.dataReader = dataReader;
         }
     }
 }

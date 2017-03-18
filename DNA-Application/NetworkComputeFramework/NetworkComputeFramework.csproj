@@ -40,18 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapReduce\IMapper.cs" />
+    <Compile Include="MapReduce\RegularChunkMapper.cs" />
+    <Compile Include="Worker\IWorker.cs" />
     <Compile Include="RunMode\AbstractRunMode.cs" />
     <Compile Include="Data\IDataLoader.cs" />
     <Compile Include="Data\IDataReader.cs" />
-    <Compile Include="Data\IFactory.cs" />
+    <Compile Include="Data\IDataApplication.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="Node\LocalNode.cs" />
-    <Compile Include="Node\Node.cs" />
+    <Compile Include="Node\INode.cs" />
     <Compile Include="RunMode\RunState.cs" />
     <Compile Include="RunMode\IRunMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunMode\ServerMode.cs" />
-    <Compile Include="Node\WorkerPool.cs" />
+    <Compile Include="Worker\WorkerPool.cs" />
+    <Compile Include="Worker\ThreadWorker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

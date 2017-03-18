@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.clusterNodesGrid = new System.Windows.Forms.DataGridView();
             this.serverPortSelector = new System.Windows.Forms.NumericUpDown();
             this.localThreadsCountSelector = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
@@ -56,9 +57,9 @@
             this.githubSourcesLink = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.clusterNodesGrid = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverPortSelector)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.localThreadsCountSelector)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -66,7 +67,6 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clusterPortSelector)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -95,6 +95,14 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server mode";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // clusterNodesGrid
+            // 
+            this.clusterNodesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.clusterNodesGrid.Location = new System.Drawing.Point(19, 37);
+            this.clusterNodesGrid.Name = "clusterNodesGrid";
+            this.clusterNodesGrid.Size = new System.Drawing.Size(342, 247);
+            this.clusterNodesGrid.TabIndex = 9;
             // 
             // serverPortSelector
             // 
@@ -164,8 +172,6 @@
             // 
             this.processingJobSelector.Enabled = false;
             this.processingJobSelector.FormattingEnabled = true;
-            this.processingJobSelector.Items.AddRange(new object[] {
-            "COUNT_BASES"});
             this.processingJobSelector.Location = new System.Drawing.Point(103, 19);
             this.processingJobSelector.Name = "processingJobSelector";
             this.processingJobSelector.Size = new System.Drawing.Size(171, 21);
@@ -177,6 +183,7 @@
             this.processingOutputLog.Multiline = true;
             this.processingOutputLog.Name = "processingOutputLog";
             this.processingOutputLog.ReadOnly = true;
+            this.processingOutputLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.processingOutputLog.Size = new System.Drawing.Size(336, 109);
             this.processingOutputLog.TabIndex = 4;
             // 
@@ -293,6 +300,7 @@
             this.clusterLogText.Multiline = true;
             this.clusterLogText.Name = "clusterLogText";
             this.clusterLogText.ReadOnly = true;
+            this.clusterLogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.clusterLogText.Size = new System.Drawing.Size(336, 340);
             this.clusterLogText.TabIndex = 0;
             // 
@@ -387,14 +395,6 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
-            // clusterNodesGrid
-            // 
-            this.clusterNodesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.clusterNodesGrid.Location = new System.Drawing.Point(19, 37);
-            this.clusterNodesGrid.Name = "clusterNodesGrid";
-            this.clusterNodesGrid.Size = new System.Drawing.Size(342, 247);
-            this.clusterNodesGrid.TabIndex = 9;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -409,6 +409,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.serverPortSelector)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.localThreadsCountSelector)).EndInit();
             this.groupBox1.ResumeLayout(false);
@@ -419,7 +420,6 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clusterPortSelector)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

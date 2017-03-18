@@ -1,5 +1,6 @@
 ﻿using NetworkComputeFramework.Data;
 using System;
+using System.IO;
 
 namespace GenomicAnalysis
 {
@@ -7,7 +8,9 @@ namespace GenomicAnalysis
     {
         public IDataReader<GenomicBase> Open(string path)
         {
-            return new GenomicDataReader();
+            path = @"C:\Users\Bureau\Documents\Workspace\VisualStudio\C-ProjetDNA\DNA-Data\genome-greshake.txt";
+            
+            return new GenomicDataReader(File.ReadAllLines(path));
         }
     }
 }

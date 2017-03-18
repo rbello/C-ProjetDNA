@@ -11,11 +11,14 @@ namespace WindowsFormsApp
     {
 
         private IRunMode runMode;
+        private GenomicAnalysisApplication app;
 
         public Form1()
         {
             InitializeComponent();
+            app = new GenomicAnalysisApplication();
             connectionErrorText.Text = "";
+            processingJobSelector.Items.AddRange(app.GetAvailableJobTypes());
         }
 
         private void startServerButton_Click(object sender, EventArgs e)
@@ -27,10 +30,11 @@ namespace WindowsFormsApp
             try
             {
                 // Create server run mode
-                runMode = new ServerMode<string, GenomicBase>(new GenomicAnalysisFactory());
+                runMode = new ServerMode<string, GenomicBase>(app);
                 // Bind GUI on worker pool events
                 runMode.WorkerPool.OnNodeConnected += OnNodeConnected;
                 runMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
+                runMode.WorkerPool.OnWorkerPoolMessage += OnWorkerPoolMessage;
                 // Start server
                 runMode.Init(
                     // On success
@@ -58,12 +62,17 @@ namespace WindowsFormsApp
             }
         }
 
-        private void OnNodeConnected(Node node)
+        private void OnWorkerPoolMessage(string message, int type)
+        {
+            AppendServerLog("[Pool]", message);
+        }
+
+        private void OnNodeConnected(INode node)
         {
             AppendServerLog("Node connected:", node);
         }
 
-        private void OnNodeDisconnected(Node node)
+        private void OnNodeDisconnected(INode node)
         {
             AppendServerLog("Node disconnected:", node);
         }
