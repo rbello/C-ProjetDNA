@@ -427,6 +427,9 @@
             this.Controls.Add(this.githubSourcesLink);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
             this.Text = "C-DNA - Distributed processing application";
             this.tabControl1.ResumeLayout(false);

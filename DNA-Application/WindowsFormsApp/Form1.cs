@@ -117,7 +117,8 @@ namespace WindowsFormsApp
         private void startStopProcessingButton_Click(object sender, EventArgs e)
         {
             // Stop operations
-            if (startStopProcessingButton.Text == "Stop") {
+            if (startStopProcessingButton.Text == "Stop")
+            {
                 AppendServerLog("Halting...");
                 throw new NotImplementedException("TODO");
             }
