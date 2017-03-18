@@ -1,6 +1,5 @@
 ﻿using NetworkComputeFramework.Data;
 using System;
-using System.Collections.Generic;
 
 namespace NetworkComputeFramework.MapReduce
 {

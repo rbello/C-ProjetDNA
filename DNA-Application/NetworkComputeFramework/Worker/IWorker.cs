@@ -1,7 +1,5 @@
 ﻿using NetworkComputeFramework.Data;
-using NetworkComputeFramework.MapReduce;
 using NetworkComputeFramework.Node;
-using System;
 
 namespace NetworkComputeFramework.Worker
 {
