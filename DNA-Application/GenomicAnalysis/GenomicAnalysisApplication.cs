@@ -1,8 +1,6 @@
-﻿using NetworkComputeFramework.Data;
+﻿using GenomicAnalysis.Process;
+using NetworkComputeFramework.Data;
 using System;
-using NetworkComputeFramework;
-using GenomicAnalysis.Jobs;
-using NetworkComputeFramework.MapReduce;
 
 namespace GenomicAnalysis
 {
@@ -13,17 +11,17 @@ namespace GenomicAnalysis
             return new GenomicDataLoader();
         }
 
-        public Job<GenomicBase> CreateJob(string jobTypeName, IDataReader<GenomicBase> dataReader)
+        public DataProcess<GenomicBase> CreateProcess(string processTypeName, IDataReader<GenomicBase> dataReader)
         {
-            switch (jobTypeName)
+            switch (processTypeName)
             {
-                case "COUNT_BASES":  return new CountBasesJob(dataReader);
+                case "COUNT_BASES":  return new CountBasesProcess(dataReader);
             }
-            throw new ArgumentException(string.Format("Job type '{0}' is not supported by '{1}' application",
-                jobTypeName, GetType().Name));
+            throw new ArgumentException(string.Format("Process type '{0}' is not supported by '{1}' application",
+                processTypeName, GetType().Name));
         }
 
-        public string[] GetAvailableJobTypes()
+        public string[] GetAvailableProcessTypes()
         {
             return new[] {
                 "COUNT_BASES"

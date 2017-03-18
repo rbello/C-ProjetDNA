@@ -40,23 +40,23 @@ namespace NetworkComputeFramework.Worker
             get { return this; }
         }
 
-        public void Process<T>(Job<T> job, Action<object> onSuccess, Action<Exception> onFailure)
+        public void Process<T>(DataProcess<T> process, Action<object> onSuccess, Action<Exception> onFailure)
         {
             new Thread(delegate ()
             {
-                ProcessSynch(job, onSuccess, onFailure);
+                ProcessSynch(process, onSuccess, onFailure);
             }).Start();
         }
 
-        protected void ProcessSynch<T>(Job<T> job, Action<object> onSuccess, Action<Exception> onFailure)
+        protected void ProcessSynch<T>(DataProcess<T> process, Action<object> onSuccess, Action<Exception> onFailure)
         {
             // Change running state
             changeStateFunc.Invoke(RunState.MAP_BEGIN);
             // Compute chunk length
-            int chunkLength = (int)(job.DataReader.Length / WorkersCount);
+            int chunkLength = (int)(process.DataReader.Length / WorkersCount);
             chunkLength = 150000;
             // Create mapper
-            IMapper<T> mapper = job.CreateMapper(chunkLength);
+            IMapper<T> mapper = process.CreateMapper(chunkLength);
             // Logs
             OnWorkerPoolMessage?.Invoke("Data length: " + mapper.DataLength + " records", LogLevel.Info);
             OnWorkerPoolMessage?.Invoke("Chunk length: " + mapper.ChunkLength + " records (remains " 
@@ -67,7 +67,7 @@ namespace NetworkComputeFramework.Worker
             {
 
                 // Handle interruption
-                if (job.Interrupted)
+                if (process.Interrupted)
                 {
                     //TODO: Improve interruption on chunk polling
                     onFailure.Invoke(new ThreadInterruptedException());
@@ -93,7 +93,7 @@ namespace NetworkComputeFramework.Worker
                 {
                     Thread.Sleep(100);
                     // Handle interruption
-                    if (job.Interrupted)
+                    if (process.Interrupted)
                     {
                         //TODO: Improve interruption on worker polling
                         onFailure.Invoke(new ThreadInterruptedException());
@@ -109,9 +109,9 @@ namespace NetworkComputeFramework.Worker
                     DataChunk<T> chunk2 = (DataChunk<T>)data;
                     try
                     {
-                        // Execute job and store result
-                        job.Results.Add(chunk2.Id, worker.Execute(chunk, job));
-                        if (job.Interrupted) return;
+                        // Execute process and store result
+                        process.Results.Add(chunk2.Id, worker.Execute(chunk, process));
+                        if (process.Interrupted) return;
                         OnWorkerPoolMessage?.Invoke(worker + " has finished reducing chunk " + chunk2.Id, LogLevel.Debug);
                         chunk2.State = ChunkState.Done;
                     }
@@ -138,7 +138,7 @@ namespace NetworkComputeFramework.Worker
 
             try
             {
-                object finalResult = job.CreateReducer().Reduce(job.Results);
+                object finalResult = process.CreateReducer().Reduce(process.Results);
                 // Process is finished
                 onSuccess.Invoke(finalResult);
             }

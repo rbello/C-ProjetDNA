@@ -1,17 +1,15 @@
-﻿using NetworkComputeFramework.Data;
-using NetworkComputeFramework.MapReduce;
+﻿using NetworkComputeFramework.MapReduce;
 using System.Collections.Generic;
-using System;
 
-namespace NetworkComputeFramework
+namespace NetworkComputeFramework.Data
 {
-    public abstract class Job<T>
+    public abstract class DataProcess<T>
     {
         public IDataReader<T> DataReader { get; protected set; }
 
         public bool Interrupted { get; set; }
 
-        public Job(IDataReader<T> dataReader)
+        public DataProcess(IDataReader<T> dataReader)
         {
             DataReader = dataReader;
             Interrupted = false;

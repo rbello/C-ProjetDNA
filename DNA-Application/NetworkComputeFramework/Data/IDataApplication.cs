@@ -8,8 +8,8 @@ namespace NetworkComputeFramework.Data
 
         IDataLoader<S, T> CreateDataLoader();
 
-        Job<T> CreateJob(string jobTypeName, IDataReader<T> dataReader);
+        DataProcess<T> CreateProcess(string processTypeName, IDataReader<T> dataReader);
 
-        string[] GetAvailableJobTypes();
+        string[] GetAvailableProcessTypes();
     }
 }

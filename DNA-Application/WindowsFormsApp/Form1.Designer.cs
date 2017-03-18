@@ -37,7 +37,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.processingJobSelector = new System.Windows.Forms.ComboBox();
+            this.processSelector = new System.Windows.Forms.ComboBox();
             this.processingOutputLog = new System.Windows.Forms.TextBox();
             this.processingProgressBar = new System.Windows.Forms.ProgressBar();
             this.startStopProcessingButton = new System.Windows.Forms.Button();
@@ -165,7 +165,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.processingJobSelector);
+            this.groupBox1.Controls.Add(this.processSelector);
             this.groupBox1.Controls.Add(this.processingOutputLog);
             this.groupBox1.Controls.Add(this.processingProgressBar);
             this.groupBox1.Controls.Add(this.startStopProcessingButton);
@@ -186,14 +186,14 @@
             this.label7.TabIndex = 6;
             this.label7.Text = "Process to execute :";
             // 
-            // processingJobSelector
+            // processSelector
             // 
-            this.processingJobSelector.Enabled = false;
-            this.processingJobSelector.FormattingEnabled = true;
-            this.processingJobSelector.Location = new System.Drawing.Point(223, 19);
-            this.processingJobSelector.Name = "processingJobSelector";
-            this.processingJobSelector.Size = new System.Drawing.Size(171, 21);
-            this.processingJobSelector.TabIndex = 5;
+            this.processSelector.Enabled = false;
+            this.processSelector.FormattingEnabled = true;
+            this.processSelector.Location = new System.Drawing.Point(223, 19);
+            this.processSelector.Name = "processSelector";
+            this.processSelector.Size = new System.Drawing.Size(171, 21);
+            this.processSelector.TabIndex = 5;
             // 
             // processingOutputLog
             // 
@@ -278,9 +278,8 @@
             this.connectionErrorText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.connectionErrorText.Location = new System.Drawing.Point(73, 90);
             this.connectionErrorText.Name = "connectionErrorText";
-            this.connectionErrorText.Size = new System.Drawing.Size(57, 13);
+            this.connectionErrorText.Size = new System.Drawing.Size(0, 13);
             this.connectionErrorText.TabIndex = 8;
-            this.connectionErrorText.Text = "Error string";
             // 
             // connectionStateLabel
             // 
@@ -480,7 +479,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox clusterLogText;
         private System.Windows.Forms.Label connectionErrorText;
-        private System.Windows.Forms.ComboBox processingJobSelector;
+        private System.Windows.Forms.ComboBox processSelector;
         private System.Windows.Forms.DataGridView clusterNodesGrid;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Timer clusterGridUpdateTimer;

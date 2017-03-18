@@ -9,7 +9,7 @@ namespace NetworkComputeFramework.RunMode
 
         protected IDataApplication<S, T> application;
 
-        public Job<T> CurrentJob { get; private set; }
+        public DataProcess<T> CurrentProcess { get; private set; }
 
         public ServerMode(IDataApplication<S, T> application) : base()
         {
@@ -42,23 +42,23 @@ namespace NetworkComputeFramework.RunMode
             // Open data source
             IDataLoader<S, T> loader = application.CreateDataLoader();
             IDataReader<T> reader = loader.Open((S) args[0]);
-            // Create the job
-            CurrentJob = application.CreateJob((string)args[1], reader);
-            // Run the job into the workers' pool
+            // Create the process
+            CurrentProcess = application.CreateProcess((string)args[1], reader);
+            // Run the process into the workers' pool
             WorkerPool.Process(
-                // Job to do
-                CurrentJob,
+                // Process to execute
+                CurrentProcess,
                 // On success
                 delegate (object finalResult)
                 {
-                    CurrentJob.CleanUp();
+                    CurrentProcess.CleanUp();
                     ChangeState(RunState.REDUCE_DONE);
                     success.Invoke(finalResult);
                 },
                 // On failure
                 delegate (Exception ex)
                 {
-                    CurrentJob.CleanUp();
+                    CurrentProcess.CleanUp();
                     ChangeState(RunState.FAILURE);
                     LastException = ex;
                     failure.Invoke(ex);
@@ -67,9 +67,9 @@ namespace NetworkComputeFramework.RunMode
 
         public override void Stop()
         {
-            if (CurrentJob != null)
+            if (CurrentProcess != null)
             {
-                CurrentJob.Interrupted = true;
+                CurrentProcess.Interrupted = true;
             }
         }
     }

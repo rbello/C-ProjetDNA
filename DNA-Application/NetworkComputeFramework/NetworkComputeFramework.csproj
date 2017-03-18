@@ -49,7 +49,7 @@
     <Compile Include="Data\IDataLoader.cs" />
     <Compile Include="Data\IDataReader.cs" />
     <Compile Include="Data\IDataApplication.cs" />
-    <Compile Include="Job.cs" />
+    <Compile Include="Data\DataProcess.cs" />
     <Compile Include="Node\LocalNode.cs" />
     <Compile Include="Node\INode.cs" />
     <Compile Include="RunMode\RunState.cs" />

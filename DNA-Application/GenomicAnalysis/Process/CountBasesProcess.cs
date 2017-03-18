@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using NetworkComputeFramework;
+﻿using System.Collections.Generic;
 using NetworkComputeFramework.Data;
 using NetworkComputeFramework.MapReduce;
 
-namespace GenomicAnalysis.Jobs
+namespace GenomicAnalysis.Process
 {
-    public class CountBasesJob : Job<GenomicBase>
+    public class CountBasesProcess : DataProcess<GenomicBase>
     {
-        public CountBasesJob(IDataReader<GenomicBase> dataReader) : base(dataReader)
+        public CountBasesProcess(IDataReader<GenomicBase> dataReader) : base(dataReader)
         {
             // Specify witch datareader to use
         }

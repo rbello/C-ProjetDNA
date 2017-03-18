@@ -5,8 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using NetworkComputeFramework.Node;
 using NetworkComputeFramework.Worker;
-using System.Data;
-using GenomicAnalysis.Jobs;
 
 namespace WindowsFormsApp
 {
@@ -19,10 +17,15 @@ namespace WindowsFormsApp
         public Form1()
         {
             InitializeComponent();
-            app = new GenomicAnalysisApplication();
-            connectionErrorText.Text = "";
-            processingJobSelector.Items.AddRange(app.GetAvailableJobTypes());
 
+            // Create application
+            app = new GenomicAnalysisApplication();
+
+            // Combo bow with availables process on data
+            processSelector.Items.AddRange(app.GetAvailableProcessTypes());
+            processSelector.SelectedIndex = 0;
+
+            // Cluster nodes gride view
             clusterNodesGrid.Columns.Add("nodeAddress", "Address");
             clusterNodesGrid.Columns.Add("nodeState", "State");
             clusterNodesGrid.Columns.Add("nodeWorkers", "Workers");
@@ -30,6 +33,9 @@ namespace WindowsFormsApp
             clusterNodesGrid.Columns.Add("nodeMemoryUsage", "Memory");
             clusterNodesGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             clusterNodesGrid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            // Adjust window position to center to screen
+            CenterToScreen();
         }
 
         private void startServerButton_Click(object sender, EventArgs e)
@@ -53,9 +59,9 @@ namespace WindowsFormsApp
                     delegate ()
                     {
                         AppendServerLog("Cluster is ready to accept connections...");
-                        // Let the data file and processing job choosable
+                        // Let the data file and process choosable
                         SetControlEnabled(loadDataFileButton, true);
-                        SetControlEnabled(processingJobSelector, true);
+                        SetControlEnabled(processSelector, true);
                         // Enable timer
                         Invoke(new ThreadStart(delegate {
                             clusterGridUpdateTimer.Enabled = true;
@@ -125,13 +131,13 @@ namespace WindowsFormsApp
                 return;
             }
             // Control input data
-            if (processingJobSelector.SelectedIndex == -1)
+            if (processSelector.SelectedIndex == -1)
             {
-                AppendServerLog("Please select a job type");
+                AppendServerLog("Please select a process type");
                 return;
             }
             // Disable UI
-            processingJobSelector.Enabled = loadDataFileButton.Enabled = false;
+            processSelector.Enabled = loadDataFileButton.Enabled = false;
             // Inverse button function
             startStopProcessingButton.Text = "Stop";
             // Load data and start processing distribution to cluster
@@ -139,16 +145,16 @@ namespace WindowsFormsApp
                 // Success
                 delegate (object finalResult)
                 {
-                    AppendServerLog("JOB FINISHED !");
+                    AppendServerLog("PROCESS FINISHED !");
                 },
                 // Failure
                 delegate (Exception ex)
                 {
-                    AppendServerLog("JOB FAILURE : ", ex.GetType().Name, ex.Message);
+                    AppendServerLog("PROCESS FAILURE : ", ex.GetType().Name, ex.Message);
                 },
                 // Arguments
                 OpenFileDialog.FileName,
-                processingJobSelector.Text
+                processSelector.Text
             );
         }
 

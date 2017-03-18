@@ -44,7 +44,7 @@
     <Compile Include="GenomicDataLoader.cs" />
     <Compile Include="GenomicBase.cs" />
     <Compile Include="GenomicDataReader.cs" />
-    <Compile Include="Jobs\CountBasesJob.cs" />
+    <Compile Include="Process\CountBasesProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
