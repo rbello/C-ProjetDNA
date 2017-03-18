@@ -2084,7 +2084,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+Size(): long",
+											"text": "+Length(): long",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -17118,7 +17118,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFa3a4ITbu5CIY="
 							},
-							"name": "Size",
+							"name": "Length",
 							"visibility": "public",
 							"isStatic": false,
 							"isLeaf": false,
