@@ -39,7 +39,6 @@
             this.processingProgressBar = new System.Windows.Forms.ProgressBar();
             this.startStopProcessingButton = new System.Windows.Forms.Button();
             this.loadDataFileButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.startServerButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -57,6 +56,7 @@
             this.githubSourcesLink = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.clusterNodesGrid = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.serverPortSelector)).BeginInit();
@@ -66,6 +66,7 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clusterPortSelector)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -80,11 +81,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.clusterNodesGrid);
             this.tabPage1.Controls.Add(this.serverPortSelector);
             this.tabPage1.Controls.Add(this.localThreadsCountSelector);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.startServerButton);
             this.tabPage1.Controls.Add(this.label1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -207,13 +208,6 @@
             this.loadDataFileButton.Text = "Load DNA file";
             this.loadDataFileButton.UseVisualStyleBackColor = true;
             this.loadDataFileButton.Click += new System.EventHandler(this.loadDataFileButton_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.Location = new System.Drawing.Point(19, 40);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(348, 244);
-            this.panel1.TabIndex = 4;
             // 
             // startServerButton
             // 
@@ -393,6 +387,14 @@
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // clusterNodesGrid
+            // 
+            this.clusterNodesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.clusterNodesGrid.Location = new System.Drawing.Point(19, 37);
+            this.clusterNodesGrid.Name = "clusterNodesGrid";
+            this.clusterNodesGrid.Size = new System.Drawing.Size(342, 247);
+            this.clusterNodesGrid.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,6 +419,7 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clusterPortSelector)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -435,7 +438,6 @@
         private System.Windows.Forms.ProgressBar processingProgressBar;
         private System.Windows.Forms.Button startStopProcessingButton;
         private System.Windows.Forms.Button loadDataFileButton;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.NumericUpDown localThreadsCountSelector;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown serverPortSelector;
@@ -453,6 +455,7 @@
         private System.Windows.Forms.TextBox clusterLogText;
         private System.Windows.Forms.Label connectionErrorText;
         private System.Windows.Forms.ComboBox processingJobSelector;
+        private System.Windows.Forms.DataGridView clusterNodesGrid;
     }
 }
 

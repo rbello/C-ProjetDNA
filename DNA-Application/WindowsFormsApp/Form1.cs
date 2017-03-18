@@ -1,8 +1,9 @@
-﻿using NetworkComputeFramework;
+﻿using GenomicAnalysis;
+using NetworkComputeFramework.RunMode;
 using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
+using NetworkComputeFramework.Node;
 
 namespace WindowsFormsApp
 {
@@ -23,14 +24,19 @@ namespace WindowsFormsApp
             SetEnabledUI(false);
             // Start server mode
             AppendServerLog("Starting server on port:", serverPortSelector.Value);
-            runMode = new ServerMode();
             try
             {
-                runMode.Start(
+                // Create server run mode
+                runMode = new ServerMode<string, GenomicBase>(new GenomicAnalysisFactory());
+                // Bind GUI on worker pool events
+                runMode.WorkerPool.OnNodeConnected += OnNodeConnected;
+                runMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
+                // Start server
+                runMode.Init(
                     // On success
                     delegate ()
                     {
-                        AppendServerLog("Server is listenning...");
+                        AppendServerLog("Cluster is ready to handle connections");
                         // Let the data file and processing job choosable
                         SetControlEnabled(loadDataFileButton, true);
                         SetControlEnabled(processingJobSelector, true);
@@ -44,13 +50,22 @@ namespace WindowsFormsApp
                     serverPortSelector.Value,
                     localThreadsCountSelector.Value
                 );
-                
             }
             catch (Exception ex)
             {
                 AppendServerLog("Fatal error :", ex);
                 SetEnabledUI(true);
             }
+        }
+
+        private void OnNodeConnected(Node node)
+        {
+            AppendServerLog("Node connected:", node);
+        }
+
+        private void OnNodeDisconnected(Node node)
+        {
+            AppendServerLog("Node disconnected:", node);
         }
 
         private void loadDataFileButton_Click(object sender, EventArgs e)
@@ -82,17 +97,21 @@ namespace WindowsFormsApp
             // Inverse button function
             startStopProcessingButton.Text = "Stop";
             // Load data and start processing distribution to cluster
-            ((ServerMode)runMode).LoadAndStartProcessingFile(OpenFileDialog.FileName, processingJobSelector.Text,
+            ((ServerMode<string, GenomicBase>)runMode).Start(
                 // Success
                 delegate ()
                 {
-                    AppendServerLog("Ok, everything is ready !!");
+                    AppendServerLog("Ok, everything is started !!");
                 },
                 // Failure
                 delegate (Exception ex)
                 {
                     AppendServerLog("Failure:", ex);
-                });
+                },
+                // Arguments
+                OpenFileDialog.FileName,
+                processingJobSelector.Text
+            );
         }
 
         private void connectClusterButton_Click(object sender, EventArgs e)
@@ -106,6 +125,11 @@ namespace WindowsFormsApp
             startServerButton.Enabled = serverPortSelector.Enabled = localThreadsCountSelector.Enabled = enabled;
             // Client mode UI
             connectClusterButton.Enabled = clusterAddressSelector.Enabled = clusterPortSelector.Enabled = enabled;
+        }
+
+        private void githubSourcesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/rbello/C-ProjetDNA");
         }
 
         private void AppendServerLog(params object[] message)
@@ -124,9 +148,6 @@ namespace WindowsFormsApp
                 ctrl.Enabled = enabled;
         }
 
-        private void githubSourcesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/rbello/C-ProjetDNA");
-        }
+
     }
 }
