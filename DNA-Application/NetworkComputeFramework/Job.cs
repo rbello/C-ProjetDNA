@@ -14,6 +14,6 @@ namespace NetworkComputeFramework
             DataReader = dataReader;
         }
 
-        public abstract IMapper<T> CreateMapper(WorkerPool workerPool);
+        public abstract IMapper<T> CreateMapper(int chunkLength);
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 using NetworkComputeFramework.Node;
+using NetworkComputeFramework.Worker;
 
 namespace WindowsFormsApp
 {
@@ -32,6 +33,7 @@ namespace WindowsFormsApp
                 // Create server run mode
                 runMode = new ServerMode<string, GenomicBase>(app);
                 // Bind GUI on worker pool events
+                runMode.OnStateChanged += OnWorkStateChanged;
                 runMode.WorkerPool.OnNodeConnected += OnNodeConnected;
                 runMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
                 runMode.WorkerPool.OnWorkerPoolMessage += OnWorkerPoolMessage;
@@ -62,7 +64,12 @@ namespace WindowsFormsApp
             }
         }
 
-        private void OnWorkerPoolMessage(string message, int type)
+        private void OnWorkStateChanged(RunState newState)
+        {
+            AppendServerLog("New state:", newState);
+        }
+
+        private void OnWorkerPoolMessage(string message, LogLevel type)
         {
             AppendServerLog("[Pool]", message);
         }

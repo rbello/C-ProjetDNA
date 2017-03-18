@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using NetworkComputeFramework.Data;
 using NetworkComputeFramework.Worker;
 
@@ -6,30 +8,40 @@ namespace NetworkComputeFramework.MapReduce
 {
     public class RegularChunkMapper<T> : IMapper<T>
     {
-        private WorkerPool workerPool;
 
-        public RegularChunkMapper(WorkerPool workerPool, IDataReader<T> dataSource)
+        public RegularChunkMapper(int chunkLength, IDataReader<T> dataSource)
         {
-            this.workerPool = workerPool;
-            this.DataSource = dataSource;
+            DataSource = dataSource;
+
+            ChunkLength = chunkLength;
+            ChunkCount = (int)(DataSource.Length / ChunkLength);
+            ChunkRemains = (int)(DataLength - ChunkCount * ChunkLength);
+            if (ChunkRemains > 0) ChunkCount++;
         }
 
         public IDataReader<T> DataSource { get; protected set; }
 
-        public void Map(Action<int, long, long, long, T[]> chunkIterator)
+        public long DataLength => DataSource.Length;
+
+        public int ChunkLength { get; private set; }
+
+        public int ChunkRemains { get; private set; }
+
+        public int ChunkCount { get; private set; }
+
+        public IEnumerator<T[]> GetEnumerator()
         {
-            int chunkCount   = workerPool.WorkersCount;
-            long dataLength  = DataSource.Length;
-            long chunkLength = (long) Math.Floor((double)(dataLength / chunkCount));
-            long remains     = dataLength - chunkCount * chunkLength;
-            for (int i = 0; i < chunkCount; ++i)
+            for (int i = 0; i < ChunkCount; ++i)
             {
-                chunkIterator.Invoke(i, i * chunkLength, ((i + 1) * chunkLength) - 1, chunkLength, null);
+                yield return DataSource.Next(ChunkLength);
             }
-            if (remains > 0)
-            {
-                chunkIterator.Invoke(chunkCount, chunkCount * chunkLength, dataLength - 1, remains, null);
-            }
+            if (ChunkRemains > 0) yield return DataSource.Next(ChunkRemains);
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
     }
 }

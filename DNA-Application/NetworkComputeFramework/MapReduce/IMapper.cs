@@ -1,10 +1,13 @@
 ﻿using System;
-using NetworkComputeFramework.Data;
+using System.Collections.Generic;
 
 namespace NetworkComputeFramework.MapReduce
 {
-    public interface IMapper<T>
+    public interface IMapper<T> : IEnumerable<T[]>
     {
-        void Map(Action<int, long, long, long, T[]> chunkIterator);
+        long DataLength { get; }
+        int ChunkLength { get; }
+        int ChunkRemains { get; }
+        int ChunkCount { get; }
     }
 }

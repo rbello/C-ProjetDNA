@@ -12,9 +12,9 @@ namespace GenomicAnalysis.Jobs
         {
         }
 
-        public override IMapper<GenomicBase> CreateMapper(WorkerPool workerPool)
+        public override IMapper<GenomicBase> CreateMapper(int chunkLength)
         {
-            return new RegularChunkMapper<GenomicBase>(workerPool, DataReader);
+            return new RegularChunkMapper<GenomicBase>(chunkLength, DataReader);
         }
     }
 }

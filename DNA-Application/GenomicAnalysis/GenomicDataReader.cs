@@ -9,7 +9,7 @@ namespace GenomicAnalysis
         private string[] lines;
         private int cursor;
 
-        public int Length { get; private set; }
+        public long Length { get; private set; }
 
         public GenomicDataReader(string[] lines)
         {

@@ -3,6 +3,8 @@
     public enum RunState
     {
         OK_LOADING,
-        ERROR
+        ERROR,
+        LOADING_DATA,
+        MAPPING_DATA
     }
 }

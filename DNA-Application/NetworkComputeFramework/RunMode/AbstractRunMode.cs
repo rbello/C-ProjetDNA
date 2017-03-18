@@ -9,15 +9,19 @@ namespace NetworkComputeFramework.RunMode
 {
     public abstract class AbstractRunMode : IRunMode
     {
-        public Exception LastError { get; set; }
 
-        public event RunModeStateHandler OnStateChanged;
+        public event Action<RunState> OnStateChanged;
 
         public WorkerPool WorkerPool { get; private set; }
  
         public AbstractRunMode()
         {
-            WorkerPool = new WorkerPool();
+            WorkerPool = new WorkerPool(this.ChangeState);
+        }
+
+        protected void ChangeState(RunState newState)
+        {
+            OnStateChanged?.Invoke(newState);
         }
 
         public void Init(Action success, Action<Exception> failure, params object[] args)

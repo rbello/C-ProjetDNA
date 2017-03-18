@@ -3,22 +3,27 @@ using NetworkComputeFramework.MapReduce;
 using NetworkComputeFramework.Node;
 using System;
 using System.Collections.Generic;
+using NetworkComputeFramework.RunMode;
+using System.Collections;
+using System.Threading;
 
 namespace NetworkComputeFramework.Worker
 {
-    public class WorkerPool
+    public class WorkerPool : IEnumerable<IWorker>
     {
 
         public event Action<INode> OnNodeConnected;
         public event Action<INode> OnNodeDisconnected;
-        public event Action<string, int> OnWorkerPoolMessage;
+        public event Action<string, LogLevel> OnWorkerPoolMessage;
 
         IList<INode> nodes = new List<INode>();
+        private Action<RunState> changeStateFunc;
 
         public int WorkersCount { get; protected set; }
 
-        public WorkerPool()
+        public WorkerPool(Action<RunState> changeStateFunc)
         {
+            this.changeStateFunc = changeStateFunc;
         }
 
         public void AddNode(INode node)
@@ -30,18 +35,90 @@ namespace NetworkComputeFramework.Worker
             OnNodeConnected?.Invoke(node);
         }
 
+        public IEnumerable<IWorker> Workers
+        {
+            get { return this; }
+        }
+
         public void Process<T>(Job<T> job)
         {
-            OnWorkerPoolMessage?.Invoke("Data length: " + job.DataReader.Length + " records", 1);
-            // Create mapper
-            IMapper <T> mapper = job.CreateMapper(this);
-            // Map data
-            mapper.Map(delegate (int number, long from, long to, long length, T[] data)
+            new Thread(delegate ()
             {
-                OnWorkerPoolMessage?.Invoke(
-                    string.Format("Chunk {0} ({1}-{2}) Length={3}", number, from, to, length)
-                    , 1);
-            });
+                ProcessSynch(job);
+            }).Start();
+        }
+
+        protected void ProcessSynch<T>(Job<T> job)
+        {
+            // Change running state
+            changeStateFunc.Invoke(RunState.MAPPING_DATA);
+            // Compute chunk length
+            int chunkLength = (int)(job.DataReader.Length / WorkersCount);
+            chunkLength = 150000;
+            // Create mapper
+            IMapper<T> mapper = job.CreateMapper(chunkLength);
+            // Logs
+            OnWorkerPoolMessage?.Invoke("Data length: " + mapper.DataLength + " records", LogLevel.Info);
+            OnWorkerPoolMessage?.Invoke("Chunk length: " + mapper.ChunkLength + " records (remains " 
+                + mapper.ChunkRemains + ")", LogLevel.Verbose);
+            OnWorkerPoolMessage?.Invoke("Chunk count: " + mapper.ChunkCount, LogLevel.Info);
+
+            int i = 0;
+            foreach (T[] chunk in mapper)
+            {
+                IWorker worker;
+                while ((worker = GetAvailableWorker()) == null) {
+                    Thread.Sleep(100);
+                }
+                ++i;
+                OnWorkerPoolMessage?.Invoke("Give chunk " + i + " to " + worker + " (length: " + chunk.Length + ")", LogLevel.Debug);
+                new Thread(new ParameterizedThreadStart(delegate (object id)
+                {
+                    try
+                    {
+                        object result = worker.Execute(chunk);
+                        OnWorkerPoolMessage?.Invoke(worker + " has finished chunk" + id, LogLevel.Debug);
+                    }
+                    catch (Exception ex)
+                    {
+                        OnWorkerPoolMessage?.Invoke("Exception in worker " + worker + " : " + ex.GetType().Name
+                            + " - " + ex.Message, LogLevel.Error);
+                    }
+                    finally
+                    {
+                        worker.Available = true;
+                    }
+                })).Start(i);
+            }
+        }
+
+        public IWorker GetAvailableWorker()
+        {
+            foreach (IWorker worker in Workers)
+            {
+                if (worker.Available)
+                {
+                    worker.Available = false;
+                    return worker;
+                }
+            }
+            return null;
+        }
+
+        public IEnumerator<IWorker> GetEnumerator()
+        {
+            foreach (INode node in nodes)
+            {
+                foreach (IWorker worker in node.Workers)
+                {
+                    yield return worker;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

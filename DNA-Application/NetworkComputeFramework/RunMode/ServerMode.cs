@@ -7,11 +7,11 @@ namespace NetworkComputeFramework.RunMode
     public class ServerMode<S, T> : AbstractRunMode
     {
 
-        protected IDataApplication<S, T> factory;
+        protected IDataApplication<S, T> application;
 
         public ServerMode(IDataApplication<S, T> factory) : base()
         {
-            this.factory = factory;
+            this.application = factory;
         }
 
         protected override void Init(params object[] args)
@@ -34,13 +34,17 @@ namespace NetworkComputeFramework.RunMode
 
         protected override void Start(params object[] args)
         {
+            // Change run mode state
+            ChangeState(RunState.LOADING_DATA);
             // Open data source
-            IDataLoader<S, T> loader = factory.CreateDataLoader();
+            IDataLoader<S, T> loader = application.CreateDataLoader();
             IDataReader<T> reader = loader.Open((S) args[0]);
             // Create the job
-            Job<T> job = factory.CreateJob((string)args[1], reader);
+            Job<T> job = application.CreateJob((string)args[1], reader);
             // Run the job into the workers' pool
             WorkerPool.Process(job);
         }
+
+        
     }
 }
