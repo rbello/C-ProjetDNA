@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.clusterNodesGrid = new System.Windows.Forms.DataGridView();
@@ -35,6 +36,7 @@
             this.localThreadsCountSelector = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.processingJobSelector = new System.Windows.Forms.ComboBox();
             this.processingOutputLog = new System.Windows.Forms.TextBox();
             this.processingProgressBar = new System.Windows.Forms.ProgressBar();
@@ -57,6 +59,7 @@
             this.githubSourcesLink = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.clusterGridUpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clusterNodesGrid)).BeginInit();
@@ -76,7 +79,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(391, 502);
+            this.tabControl1.Size = new System.Drawing.Size(501, 502);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -91,17 +94,22 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(383, 476);
+            this.tabPage1.Size = new System.Drawing.Size(493, 476);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server mode";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // clusterNodesGrid
             // 
+            this.clusterNodesGrid.AllowUserToAddRows = false;
+            this.clusterNodesGrid.AllowUserToDeleteRows = false;
+            this.clusterNodesGrid.AllowUserToOrderColumns = true;
             this.clusterNodesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterNodesGrid.Location = new System.Drawing.Point(19, 37);
             this.clusterNodesGrid.Name = "clusterNodesGrid";
-            this.clusterNodesGrid.Size = new System.Drawing.Size(342, 247);
+            this.clusterNodesGrid.ReadOnly = true;
+            this.clusterNodesGrid.RowHeadersVisible = false;
+            this.clusterNodesGrid.Size = new System.Drawing.Size(468, 247);
             this.clusterNodesGrid.TabIndex = 9;
             // 
             // serverPortSelector
@@ -156,6 +164,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.processingJobSelector);
             this.groupBox1.Controls.Add(this.processingOutputLog);
             this.groupBox1.Controls.Add(this.processingProgressBar);
@@ -163,16 +172,25 @@
             this.groupBox1.Controls.Add(this.loadDataFileButton);
             this.groupBox1.Location = new System.Drawing.Point(19, 290);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(348, 180);
+            this.groupBox1.Size = new System.Drawing.Size(468, 180);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Data processing";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(113, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(104, 13);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Process to execute :";
             // 
             // processingJobSelector
             // 
             this.processingJobSelector.Enabled = false;
             this.processingJobSelector.FormattingEnabled = true;
-            this.processingJobSelector.Location = new System.Drawing.Point(103, 19);
+            this.processingJobSelector.Location = new System.Drawing.Point(223, 19);
             this.processingJobSelector.Name = "processingJobSelector";
             this.processingJobSelector.Size = new System.Drawing.Size(171, 21);
             this.processingJobSelector.TabIndex = 5;
@@ -184,20 +202,20 @@
             this.processingOutputLog.Name = "processingOutputLog";
             this.processingOutputLog.ReadOnly = true;
             this.processingOutputLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.processingOutputLog.Size = new System.Drawing.Size(336, 109);
+            this.processingOutputLog.Size = new System.Drawing.Size(456, 109);
             this.processingOutputLog.TabIndex = 4;
             // 
             // processingProgressBar
             // 
             this.processingProgressBar.Location = new System.Drawing.Point(6, 46);
             this.processingProgressBar.Name = "processingProgressBar";
-            this.processingProgressBar.Size = new System.Drawing.Size(336, 13);
+            this.processingProgressBar.Size = new System.Drawing.Size(456, 13);
             this.processingProgressBar.TabIndex = 3;
             // 
             // startStopProcessingButton
             // 
             this.startStopProcessingButton.Enabled = false;
-            this.startStopProcessingButton.Location = new System.Drawing.Point(280, 19);
+            this.startStopProcessingButton.Location = new System.Drawing.Point(400, 19);
             this.startStopProcessingButton.Name = "startStopProcessingButton";
             this.startStopProcessingButton.Size = new System.Drawing.Size(62, 23);
             this.startStopProcessingButton.TabIndex = 1;
@@ -249,7 +267,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(383, 476);
+            this.tabPage2.Size = new System.Drawing.Size(493, 476);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Client mode";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -289,7 +307,7 @@
             this.groupBox2.Controls.Add(this.clusterLogText);
             this.groupBox2.Location = new System.Drawing.Point(20, 104);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(348, 365);
+            this.groupBox2.Size = new System.Drawing.Size(467, 365);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Logs";
@@ -301,7 +319,7 @@
             this.clusterLogText.Name = "clusterLogText";
             this.clusterLogText.ReadOnly = true;
             this.clusterLogText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.clusterLogText.Size = new System.Drawing.Size(336, 340);
+            this.clusterLogText.Size = new System.Drawing.Size(455, 340);
             this.clusterLogText.TabIndex = 0;
             // 
             // connectClusterButton
@@ -369,7 +387,7 @@
             // githubSourcesLink
             // 
             this.githubSourcesLink.AutoSize = true;
-            this.githubSourcesLink.Location = new System.Drawing.Point(421, 490);
+            this.githubSourcesLink.Location = new System.Drawing.Point(531, 492);
             this.githubSourcesLink.Name = "githubSourcesLink";
             this.githubSourcesLink.Size = new System.Drawing.Size(133, 13);
             this.githubSourcesLink.TabIndex = 2;
@@ -380,7 +398,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(421, 468);
+            this.label3.Location = new System.Drawing.Point(531, 470);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(135, 13);
             this.label3.TabIndex = 3;
@@ -389,17 +407,22 @@
             // pictureBox1
             // 
             this.pictureBox1.BackgroundImage = global::WindowsFormsApp.Properties.Resources.LogoDNA;
-            this.pictureBox1.Location = new System.Drawing.Point(409, 34);
+            this.pictureBox1.Location = new System.Drawing.Point(519, 34);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(156, 268);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
+            // clusterGridUpdateTimer
+            // 
+            this.clusterGridUpdateTimer.Interval = 1000;
+            this.clusterGridUpdateTimer.Tick += new System.EventHandler(this.clusterGridUpdateTimer_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 526);
+            this.ClientSize = new System.Drawing.Size(687, 526);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.githubSourcesLink);
             this.Controls.Add(this.pictureBox1);
@@ -456,6 +479,8 @@
         private System.Windows.Forms.Label connectionErrorText;
         private System.Windows.Forms.ComboBox processingJobSelector;
         private System.Windows.Forms.DataGridView clusterNodesGrid;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Timer clusterGridUpdateTimer;
     }
 }
 

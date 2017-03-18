@@ -5,6 +5,8 @@ using System.Threading;
 using System.Windows.Forms;
 using NetworkComputeFramework.Node;
 using NetworkComputeFramework.Worker;
+using System.Data;
+using GenomicAnalysis.Jobs;
 
 namespace WindowsFormsApp
 {
@@ -20,6 +22,14 @@ namespace WindowsFormsApp
             app = new GenomicAnalysisApplication();
             connectionErrorText.Text = "";
             processingJobSelector.Items.AddRange(app.GetAvailableJobTypes());
+
+            clusterNodesGrid.Columns.Add("nodeAddress", "Address");
+            clusterNodesGrid.Columns.Add("nodeState", "State");
+            clusterNodesGrid.Columns.Add("nodeWorkers", "Workers");
+            clusterNodesGrid.Columns.Add("nodeCpuUsage", "CPU");
+            clusterNodesGrid.Columns.Add("nodeMemoryUsage", "Memory");
+            clusterNodesGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            clusterNodesGrid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         }
 
         private void startServerButton_Click(object sender, EventArgs e)
@@ -46,6 +56,10 @@ namespace WindowsFormsApp
                         // Let the data file and processing job choosable
                         SetControlEnabled(loadDataFileButton, true);
                         SetControlEnabled(processingJobSelector, true);
+                        // Enable timer
+                        Invoke(new ThreadStart(delegate {
+                            clusterGridUpdateTimer.Enabled = true;
+                        }));
                     },
                     // On failure
                     delegate (Exception ex)
@@ -77,6 +91,11 @@ namespace WindowsFormsApp
         private void OnNodeConnected(INode node)
         {
             AppendServerLog("Node connected:", node);
+            Invoke(new ThreadStart(delegate {
+                clusterNodesGrid.Rows.Add(
+                    node, "Idle", "0/" + node.Workers.Count, node.CpuUsage + "%", node.MemoryUsage + "MB"
+                );
+            }));
         }
 
         private void OnNodeDisconnected(INode node)
@@ -164,6 +183,16 @@ namespace WindowsFormsApp
                 ctrl.Enabled = enabled;
         }
 
-
+        private void clusterGridUpdateTimer_Tick(object sender, EventArgs e)
+        {
+            // Update datagrid view with fresh data
+            foreach (DataGridViewRow row in clusterNodesGrid.Rows)
+            {
+                INode node = (INode)row.Cells[0].Value;
+                row.SetValues(node, node.Active ? "Process" : "Idle",
+                    node.ActiveWorkersCount + "/" + node.Workers.Count, Math.Round(node.CpuUsage, 2) + "%",
+                    node.MemoryUsage + "MB");
+            }
+        }
     }
 }
