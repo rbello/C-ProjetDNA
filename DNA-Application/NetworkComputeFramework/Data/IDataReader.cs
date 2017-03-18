@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetworkComputeFramework.Data
 {
-    public interface IDataReader<T>
+    public interface IDataReader<T> : IDisposable
     {
 
         long Length { get; }
@@ -14,6 +14,5 @@ namespace NetworkComputeFramework.Data
         T Next();
 
         T[] Next(int length);
-
     }
 }

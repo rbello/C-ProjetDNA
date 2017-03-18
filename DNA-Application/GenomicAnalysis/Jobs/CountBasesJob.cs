@@ -1,4 +1,6 @@
-﻿using NetworkComputeFramework;
+﻿using System;
+using System.Collections.Generic;
+using NetworkComputeFramework;
 using NetworkComputeFramework.Data;
 using NetworkComputeFramework.MapReduce;
 
@@ -8,15 +10,18 @@ namespace GenomicAnalysis.Jobs
     {
         public CountBasesJob(IDataReader<GenomicBase> dataReader) : base(dataReader)
         {
+            // Specify witch datareader to use
         }
 
         public override IMapper<GenomicBase> CreateMapper(int chunkLength)
         {
+            // Use a standard mapper
             return new RegularChunkMapper<GenomicBase>(chunkLength, DataReader);
         }
 
         public override IReducer<GenomicBase> CreateReducer()
         {
+            // Use a specific reducer
             return new CountBasesReducer();
         }
     }
@@ -25,7 +30,18 @@ namespace GenomicAnalysis.Jobs
     {
         public object Reduce(DataChunk<GenomicBase> chunk)
         {
-            return null;
+            return new CountBasesResult();
+        }
+
+        public object Reduce(IDictionary<int, object> subResults)
+        {
+            return "YES";
         }
     }
+
+    public class CountBasesResult
+    {
+
+    }
+
 }

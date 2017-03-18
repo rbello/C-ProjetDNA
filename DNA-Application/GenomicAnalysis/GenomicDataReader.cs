@@ -7,6 +7,7 @@ namespace GenomicAnalysis
     public class GenomicDataReader : IDataReader<GenomicBase>
     {
         private string[] lines;
+
         private int cursor;
 
         public long Length { get; private set; }
@@ -42,6 +43,13 @@ namespace GenomicAnalysis
                 }
                 return output;
             }
+        }
+
+        public void Dispose()
+        {
+            lines = null;
+            cursor = -1;
+            Length = 0;
         }
     }
 }

@@ -52,7 +52,7 @@ namespace WindowsFormsApp
                     // On success
                     delegate ()
                     {
-                        AppendServerLog("Cluster is ready to handle connections");
+                        AppendServerLog("Cluster is ready to accept connections...");
                         // Let the data file and processing job choosable
                         SetControlEnabled(loadDataFileButton, true);
                         SetControlEnabled(processingJobSelector, true);
@@ -120,7 +120,9 @@ namespace WindowsFormsApp
             if (startStopProcessingButton.Text == "Stop")
             {
                 AppendServerLog("Halting...");
-                throw new NotImplementedException("TODO");
+                runMode.Stop();
+                //TODO: Swap UI to initial state
+                return;
             }
             // Control input data
             if (processingJobSelector.SelectedIndex == -1)
@@ -135,14 +137,14 @@ namespace WindowsFormsApp
             // Load data and start processing distribution to cluster
             ((ServerMode<string, GenomicBase>)runMode).Start(
                 // Success
-                delegate ()
+                delegate (object finalResult)
                 {
-                    AppendServerLog("Ok, everything is started !!");
+                    AppendServerLog("JOB FINISHED !");
                 },
                 // Failure
                 delegate (Exception ex)
                 {
-                    AppendServerLog("Failure:", ex);
+                    AppendServerLog("JOB FAILURE : ", ex.GetType().Name, ex.Message);
                 },
                 // Arguments
                 OpenFileDialog.FileName,

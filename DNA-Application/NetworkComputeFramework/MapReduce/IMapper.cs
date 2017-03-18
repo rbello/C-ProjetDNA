@@ -1,9 +1,10 @@
 ﻿using NetworkComputeFramework.Data;
+using System;
 using System.Collections.Generic;
 
 namespace NetworkComputeFramework.MapReduce
 {
-    public interface IMapper<T>
+    public interface IMapper<T> : IDisposable
     {
         long DataLength { get; }
         int ChunkLength { get; }

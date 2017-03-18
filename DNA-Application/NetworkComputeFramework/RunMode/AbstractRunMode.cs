@@ -13,7 +13,11 @@ namespace NetworkComputeFramework.RunMode
         public event Action<RunState> OnStateChanged;
 
         public WorkerPool WorkerPool { get; private set; }
- 
+
+        public RunState State { get; private set; }
+
+        public Exception LastException { get; protected set; }
+
         public AbstractRunMode()
         {
             WorkerPool = new WorkerPool(this.ChangeState);
@@ -21,6 +25,8 @@ namespace NetworkComputeFramework.RunMode
 
         protected void ChangeState(RunState newState)
         {
+            if (State == newState) return;
+            State = newState;
             OnStateChanged?.Invoke(newState);
         }
 
@@ -43,14 +49,13 @@ namespace NetworkComputeFramework.RunMode
 
         protected abstract void Init(params object[] args);
 
-        public void Start(Action success, Action<Exception> failure, params object[] args)
+        public void Start(Action<object> success, Action<Exception> failure, params object[] args)
         {
             new Thread(delegate ()
             {
                 try
                 {
-                    Start(args);
-                    success();
+                    StartSynch(success, failure, args);
                 }
                 catch (Exception ex)
                 {
@@ -60,7 +65,8 @@ namespace NetworkComputeFramework.RunMode
             }).Start();
         }
 
-        protected abstract void Start(params object[] args);
+        protected abstract void StartSynch(Action<object> success, Action<Exception> failure, params object[] args);
 
+        public abstract void Stop();
     }
 }

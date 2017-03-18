@@ -40,18 +40,18 @@ namespace NetworkComputeFramework.Worker
             get { return this; }
         }
 
-        public void Process<T>(Job<T> job)
+        public void Process<T>(Job<T> job, Action<object> onSuccess, Action<Exception> onFailure)
         {
             new Thread(delegate ()
             {
-                ProcessSynch(job);
+                ProcessSynch(job, onSuccess, onFailure);
             }).Start();
         }
 
-        protected void ProcessSynch<T>(Job<T> job)
+        protected void ProcessSynch<T>(Job<T> job, Action<object> onSuccess, Action<Exception> onFailure)
         {
             // Change running state
-            changeStateFunc.Invoke(RunState.MAPPING_DATA);
+            changeStateFunc.Invoke(RunState.MAP_BEGIN);
             // Compute chunk length
             int chunkLength = (int)(job.DataReader.Length / WorkersCount);
             chunkLength = 150000;
@@ -69,7 +69,8 @@ namespace NetworkComputeFramework.Worker
                 // Handle interruption
                 if (job.Interrupted)
                 {
-                    // TODO Improve interruption on mapping
+                    //TODO: Improve interruption on chunk polling
+                    onFailure.Invoke(new ThreadInterruptedException());
                     return;
                 }
 
@@ -77,7 +78,8 @@ namespace NetworkComputeFramework.Worker
                 DataChunk<T> chunk = mapper.NextChunk();
                 if (chunk == null)
                 {
-                    // No chunk is available but the mapped is not consumed : continue
+                    // No chunk is available but the mapped is active
+                    changeStateFunc.Invoke(RunState.MAP_DONE);
                     Thread.Sleep(100);
                     continue;
                 }
@@ -87,7 +89,17 @@ namespace NetworkComputeFramework.Worker
 
                 // Find an available worker
                 IWorker worker;
-                while ((worker = GetAvailableWorker()) == null) Thread.Sleep(100);
+                while ((worker = GetAvailableWorker()) == null)
+                {
+                    Thread.Sleep(100);
+                    // Handle interruption
+                    if (job.Interrupted)
+                    {
+                        //TODO: Improve interruption on worker polling
+                        onFailure.Invoke(new ThreadInterruptedException());
+                        return;
+                    }
+                }
 
                 // Assign chunk to worker
                 OnWorkerPoolMessage?.Invoke("Give chunk " + chunk.Id + " to " + worker + " (length: " + chunk.Data.Length + ")", LogLevel.Debug);
@@ -97,15 +109,17 @@ namespace NetworkComputeFramework.Worker
                     DataChunk<T> chunk2 = (DataChunk<T>)data;
                     try
                     {
-                        worker.Execute(chunk, job);
+                        // Execute job and store result
+                        job.Results.Add(chunk2.Id, worker.Execute(chunk, job));
+                        if (job.Interrupted) return;
                         OnWorkerPoolMessage?.Invoke(worker + " has finished reducing chunk " + chunk2.Id, LogLevel.Debug);
                         chunk2.State = ChunkState.Done;
-
                     }
                     catch (Exception ex)
                     {
                         OnWorkerPoolMessage?.Invoke("Exception in worker " + worker + " : " + ex.GetType().Name
                             + " - " + ex.Message + " (chunk " + chunk2.Id + ")", LogLevel.Error);
+                        OnWorkerPoolMessage?.Invoke(ex.ToString(), LogLevel.Debug);
                         chunk2.State = ChunkState.Available;
                     }
                     finally
@@ -115,7 +129,24 @@ namespace NetworkComputeFramework.Worker
                 })).Start(chunk);
             }
 
-            OnWorkerPoolMessage?.Invoke("All data are reduced !", LogLevel.Info);
+            // Clear memory used by mapper
+            mapper.Dispose();
+
+            // Change running state
+            OnWorkerPoolMessage?.Invoke("All chunks are reduced, reducing results...", LogLevel.Info);
+            changeStateFunc.Invoke(RunState.REDUCE_BEGIN);
+
+            try
+            {
+                object finalResult = job.CreateReducer().Reduce(job.Results);
+                // Process is finished
+                onSuccess.Invoke(finalResult);
+            }
+            catch (Exception ex)
+            {
+                onFailure.Invoke(ex);
+            }
+
         }
 
         public IWorker GetAvailableWorker()

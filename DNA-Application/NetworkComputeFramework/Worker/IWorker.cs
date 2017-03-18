@@ -14,7 +14,7 @@ namespace NetworkComputeFramework.Worker
 
         bool Available { get; set; }
 
-        void Execute<T>(DataChunk<T> chunk, Job<T> job);
+        object Execute<T>(DataChunk<T> chunk, Job<T> job);
 
     }
 }

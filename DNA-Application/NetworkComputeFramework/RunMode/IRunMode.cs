@@ -9,11 +9,15 @@ namespace NetworkComputeFramework.RunMode
 
         void Init(Action success, Action<Exception> failure, params object[] args);
 
-        void Start(Action success, Action<Exception> failure, params object[] args);
+        void Start(Action<object> success, Action<Exception> failure, params object[] args);
 
         event Action<RunState> OnStateChanged;
 
         WorkerPool WorkerPool { get; }
+
+        void Stop();
+
+        Exception LastException { get; }
 
     }
 }

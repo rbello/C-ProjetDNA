@@ -20,10 +20,10 @@ namespace NetworkComputeFramework.Worker
 
         public bool Available { get; set; }
 
-        public void Execute<T>(DataChunk<T> chunk, Job<T> job)
+        public object Execute<T>(DataChunk<T> chunk, Job<T> job)
         {
             Thread.Sleep(5000);
-            object result = job.CreateReducer().Reduce(chunk);
+            return job.CreateReducer().Reduce(chunk);
         }
 
         public override string ToString()

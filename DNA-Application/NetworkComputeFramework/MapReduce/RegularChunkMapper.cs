@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using NetworkComputeFramework.Data;
 
@@ -43,6 +42,13 @@ namespace NetworkComputeFramework.MapReduce
                 // Each chunk is loaded and done
                 return false;
             }
+        }
+
+        public void Dispose()
+        {
+            chunks = null;
+            ChunkLength = ChunkRemains = ChunkCount = 0;
+            DataSource = null;
         }
 
         [Obsolete]
