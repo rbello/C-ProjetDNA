@@ -63,35 +63,59 @@ namespace NetworkComputeFramework.Worker
                 + mapper.ChunkRemains + ")", LogLevel.Verbose);
             OnWorkerPoolMessage?.Invoke("Chunk count: " + mapper.ChunkCount, LogLevel.Info);
 
-            int i = 0;
-            foreach (DataChunk<T> chunk in mapper)
+            while (mapper.Active)
             {
-                IWorker worker;
-                while ((worker = GetAvailableWorker()) == null) {
-                    Thread.Sleep(100);
-                }
-                ++i;
-                OnWorkerPoolMessage?.Invoke("Give chunk " + i + " to " + worker + " (length: " + chunk.Data.Length + ")", LogLevel.Debug);
-                new Thread(new ParameterizedThreadStart(delegate (object id)
+
+                // Handle interruption
+                if (job.Interrupted)
                 {
+                    // TODO Improve interruption on mapping
+                    return;
+                }
+
+                // Get next chunk of data
+                DataChunk<T> chunk = mapper.NextChunk();
+                if (chunk == null)
+                {
+                    // No chunk is available but the mapped is not consumed : continue
+                    Thread.Sleep(100);
+                    continue;
+                }
+
+                // Chunk is booked with worker
+                chunk.State = ChunkState.Booked;
+
+                // Find an available worker
+                IWorker worker;
+                while ((worker = GetAvailableWorker()) == null) Thread.Sleep(100);
+
+                // Assign chunk to worker
+                OnWorkerPoolMessage?.Invoke("Give chunk " + chunk.Id + " to " + worker + " (length: " + chunk.Data.Length + ")", LogLevel.Debug);
+
+                new Thread(new ParameterizedThreadStart(delegate (object data)
+                {
+                    DataChunk<T> chunk2 = (DataChunk<T>)data;
                     try
                     {
-                        worker.Execute(chunk, job.CreateReducer());
-                        OnWorkerPoolMessage?.Invoke(worker + " has finished chunk" + id, LogLevel.Debug);
+                        worker.Execute(chunk, job);
+                        OnWorkerPoolMessage?.Invoke(worker + " has finished reducing chunk " + chunk2.Id, LogLevel.Debug);
+                        chunk2.State = ChunkState.Done;
+
                     }
                     catch (Exception ex)
                     {
                         OnWorkerPoolMessage?.Invoke("Exception in worker " + worker + " : " + ex.GetType().Name
-                            + " - " + ex.Message, LogLevel.Error);
+                            + " - " + ex.Message + " (chunk " + chunk2.Id + ")", LogLevel.Error);
+                        chunk2.State = ChunkState.Available;
                     }
                     finally
                     {
                         worker.Available = true;
                     }
-                })).Start(i);
+                })).Start(chunk);
             }
 
-            OnWorkerPoolMessage?.Invoke("All data was distributed!", LogLevel.Info);
+            OnWorkerPoolMessage?.Invoke("All data are reduced !", LogLevel.Info);
         }
 
         public IWorker GetAvailableWorker()

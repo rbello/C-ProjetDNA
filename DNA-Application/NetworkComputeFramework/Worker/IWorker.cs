@@ -7,12 +7,14 @@ namespace NetworkComputeFramework.Worker
 {
     public interface IWorker
     {
+
         INode Node { get; }
 
         int ID { get; }
 
         bool Available { get; set; }
 
-        void Execute<T>(DataChunk<T> chunk, IReducer<T> reducer);
+        void Execute<T>(DataChunk<T> chunk, Job<T> job);
+
     }
 }

@@ -23,9 +23,9 @@ namespace GenomicAnalysis.Jobs
 
     public class CountBasesReducer : IReducer<GenomicBase>
     {
-        public void Reduce(DataChunk<GenomicBase> chunk)
+        public object Reduce(DataChunk<GenomicBase> chunk)
         {
-            chunk.Done = true;
+            return null;
         }
     }
 }

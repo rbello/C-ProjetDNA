@@ -1,8 +1,6 @@
-﻿using System;
-using NetworkComputeFramework.Node;
+﻿using NetworkComputeFramework.Node;
 using System.Threading;
 using NetworkComputeFramework.Data;
-using NetworkComputeFramework.MapReduce;
 
 namespace NetworkComputeFramework.Worker
 {
@@ -22,10 +20,10 @@ namespace NetworkComputeFramework.Worker
 
         public bool Available { get; set; }
 
-        public void Execute<T>(DataChunk<T> chunk, IReducer<T> reducer)
+        public void Execute<T>(DataChunk<T> chunk, Job<T> job)
         {
             Thread.Sleep(5000);
-            reducer.Reduce(chunk);
+            object result = job.CreateReducer().Reduce(chunk);
         }
 
         public override string ToString()
