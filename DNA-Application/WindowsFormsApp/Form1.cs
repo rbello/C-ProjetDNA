@@ -26,7 +26,7 @@ namespace WindowsFormsApp
             processSelector.SelectedIndex = 0;
 
             // Cluster nodes gride view
-            clusterNodesGrid.Columns.Add("nodeAddress", "Address");
+            clusterNodesGrid.Columns.Add("nodeAddress", "Node");
             clusterNodesGrid.Columns.Add("nodeState", "State");
             clusterNodesGrid.Columns.Add("nodeWorkers", "Workers");
             clusterNodesGrid.Columns.Add("nodeCpuUsage", "CPU");
@@ -146,6 +146,7 @@ namespace WindowsFormsApp
                 delegate (object finalResult)
                 {
                     AppendServerLog("PROCESS FINISHED !");
+                    AppendServerLog(finalResult);
                 },
                 // Failure
                 delegate (Exception ex)

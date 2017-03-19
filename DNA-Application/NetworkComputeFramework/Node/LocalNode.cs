@@ -40,7 +40,7 @@ namespace NetworkComputeFramework.Node
 
         public override string ToString()
         {
-            return "LocalNode[127.0.0.1]";
+            return "LocalNode [127.0.0.1]";
         }
     }
 }

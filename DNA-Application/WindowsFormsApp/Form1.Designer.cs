@@ -109,7 +109,8 @@
             this.clusterNodesGrid.Name = "clusterNodesGrid";
             this.clusterNodesGrid.ReadOnly = true;
             this.clusterNodesGrid.RowHeadersVisible = false;
-            this.clusterNodesGrid.Size = new System.Drawing.Size(468, 247);
+            this.clusterNodesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.clusterNodesGrid.Size = new System.Drawing.Size(468, 131);
             this.clusterNodesGrid.TabIndex = 9;
             // 
             // serverPortSelector
@@ -170,9 +171,9 @@
             this.groupBox1.Controls.Add(this.processingProgressBar);
             this.groupBox1.Controls.Add(this.startStopProcessingButton);
             this.groupBox1.Controls.Add(this.loadDataFileButton);
-            this.groupBox1.Location = new System.Drawing.Point(19, 290);
+            this.groupBox1.Location = new System.Drawing.Point(19, 174);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(468, 180);
+            this.groupBox1.Size = new System.Drawing.Size(468, 296);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Data processing";
@@ -202,7 +203,7 @@
             this.processingOutputLog.Name = "processingOutputLog";
             this.processingOutputLog.ReadOnly = true;
             this.processingOutputLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.processingOutputLog.Size = new System.Drawing.Size(456, 109);
+            this.processingOutputLog.Size = new System.Drawing.Size(456, 225);
             this.processingOutputLog.TabIndex = 4;
             // 
             // processingProgressBar
@@ -378,10 +379,6 @@
             this.label4.Size = new System.Drawing.Size(85, 13);
             this.label4.TabIndex = 0;
             this.label4.Text = "Cluster address :";
-            // 
-            // OpenFileDialog
-            // 
-            this.OpenFileDialog.FileName = "openFileDialog1";
             // 
             // githubSourcesLink
             // 
