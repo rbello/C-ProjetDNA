@@ -1,60 +1,33 @@
 ﻿using GenomicAnalysis;
 using NetworkComputeFramework.RunMode;
 using System;
-using System.Threading;
 using System.Windows.Forms;
-using NetworkComputeFramework.Node;
+using System.Threading;
 using NetworkComputeFramework.Worker;
+using NetworkComputeFramework.Node;
 
 namespace WindowsFormsApp
 {
-    public partial class Form1 : Form
+    public partial class MainForm
     {
-
-        private IRunMode runMode;
-        private GenomicAnalysisApplication app;
-
-        public Form1()
-        {
-            InitializeComponent();
-
-            // Create application
-            app = new GenomicAnalysisApplication();
-
-            // Combo bow with availables process on data
-            processSelector.Items.AddRange(app.GetAvailableProcessTypes());
-            processSelector.SelectedIndex = 0;
-
-            // Cluster nodes gride view
-            clusterNodesGrid.Columns.Add("nodeAddress", "Node");
-            clusterNodesGrid.Columns.Add("nodeState", "State");
-            clusterNodesGrid.Columns.Add("nodeWorkers", "Workers");
-            clusterNodesGrid.Columns.Add("nodeCpuUsage", "CPU");
-            clusterNodesGrid.Columns.Add("nodeMemoryUsage", "Memory");
-            clusterNodesGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            clusterNodesGrid.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            // Adjust window position to center to screen
-            CenterToScreen();
-        }
 
         private void startServerButton_Click(object sender, EventArgs e)
         {
             // Disable UI
-            SetEnabledUI(false);
+            SetEnabledUI(false, false);
             // Start server mode
             AppendServerLog("Starting server on port:", serverPortSelector.Value);
             try
             {
                 // Create server run mode
-                runMode = new ServerMode<string, GenomicNucleotidePeer>(app);
+                serverMode = new ServerMode<string, GenomicNucleotidePeer>(app);
                 // Bind GUI on worker pool events
-                runMode.OnStateChanged += OnWorkStateChanged;
-                runMode.WorkerPool.OnNodeConnected += OnNodeConnected;
-                runMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
-                runMode.WorkerPool.OnWorkerPoolMessage += OnWorkerPoolMessage;
+                serverMode.OnStateChanged += OnWorkStateChanged;
+                serverMode.WorkerPool.OnNodeConnected += OnNodeConnected;
+                serverMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
+                serverMode.WorkerPool.OnWorkerPoolMessage += OnWorkerPoolMessage;
                 // Start server
-                runMode.Init(
+                serverMode.Init(
                     // On success
                     delegate ()
                     {
@@ -80,7 +53,7 @@ namespace WindowsFormsApp
             catch (Exception ex)
             {
                 AppendServerLog("Fatal error :", ex);
-                SetEnabledUI(true);
+                SetEnabledUI(false, true);
             }
         }
 
@@ -126,7 +99,7 @@ namespace WindowsFormsApp
             if (startStopProcessingButton.Text == "Stop")
             {
                 AppendServerLog("Halting...");
-                runMode.Stop();
+                serverMode.Stop();
                 //TODO: Swap UI to initial state
                 return;
             }
@@ -141,7 +114,7 @@ namespace WindowsFormsApp
             // Inverse button function
             startStopProcessingButton.Text = "Stop";
             // Load data and start processing distribution to cluster
-            ((ServerMode<string, GenomicNucleotidePeer>)runMode).Start(
+            ((ServerMode<string, GenomicNucleotidePeer>)serverMode).Start(
                 // Success
                 delegate (object finalResult)
                 {
@@ -159,40 +132,6 @@ namespace WindowsFormsApp
             );
         }
 
-        private void connectClusterButton_Click(object sender, EventArgs e)
-        {
-            SetEnabledUI(false);
-        }
-
-        private void SetEnabledUI(bool enabled)
-        {
-            // Server mode UI
-            startServerButton.Enabled = serverPortSelector.Enabled = localThreadsCountSelector.Enabled = enabled;
-            // Client mode UI
-            connectClusterButton.Enabled = clusterAddressSelector.Enabled = clusterPortSelector.Enabled = enabled;
-        }
-
-        private void githubSourcesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://github.com/rbello/C-ProjetDNA");
-        }
-
-        private void AppendServerLog(params object[] message)
-        {
-            if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendServerLog(message); }));
-            else
-                processingOutputLog.AppendText(string.Join(" ", message) + Environment.NewLine);
-        }
-
-        private void SetControlEnabled(Control ctrl, bool enabled)
-        {
-            if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { SetControlEnabled(ctrl, enabled); }));
-            else
-                ctrl.Enabled = enabled;
-        }
-
         private void clusterGridUpdateTimer_Tick(object sender, EventArgs e)
         {
             // Update datagrid view with fresh data
@@ -204,5 +143,6 @@ namespace WindowsFormsApp
                     node.MemoryUsage + "MB");
             }
         }
+
     }
 }
