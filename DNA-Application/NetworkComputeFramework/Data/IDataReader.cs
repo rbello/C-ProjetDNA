@@ -10,5 +10,8 @@ namespace NetworkComputeFramework.Data
         T Next();
 
         T[] Next(int length);
+
+        bool HasNext { get; }
+
     }
 }

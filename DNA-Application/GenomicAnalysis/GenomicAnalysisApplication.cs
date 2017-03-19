@@ -4,14 +4,14 @@ using System;
 
 namespace GenomicAnalysis
 {
-    public class GenomicAnalysisApplication : IDataApplication<string, GenomicBase>
+    public class GenomicAnalysisApplication : IDataApplication<string, GenomicNucleotidePeer>
     {
-        public IDataLoader<string, GenomicBase> CreateDataLoader()
+        public IDataLoader<string, GenomicNucleotidePeer> CreateDataLoader()
         {
             return new GenomicDataLoader();
         }
 
-        public DataProcess<GenomicBase> CreateProcess(string processTypeName, IDataReader<GenomicBase> dataReader)
+        public DataProcess<GenomicNucleotidePeer> CreateProcess(string processTypeName, IDataReader<GenomicNucleotidePeer> dataReader)
         {
             switch (processTypeName)
             {

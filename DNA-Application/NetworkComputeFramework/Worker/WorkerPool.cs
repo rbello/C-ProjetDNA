@@ -53,14 +53,15 @@ namespace NetworkComputeFramework.Worker
             // Change running state
             changeStateFunc.Invoke(RunState.MAP_BEGIN);
             // Compute chunk length
+            //TODO: Remplace with real strategy
             int chunkLength = (int)(process.DataReader.Length / WorkersCount);
             chunkLength = 150000;
             // Create mapper
             IMapper<T> mapper = process.CreateMapper(chunkLength);
             // Logs
             OnWorkerPoolMessage?.Invoke("Data length: " + mapper.DataLength + " records", LogLevel.Info);
-            OnWorkerPoolMessage?.Invoke("Chunk length: " + mapper.ChunkLength + " records (remains " 
-                + mapper.ChunkRemains + ")", LogLevel.Verbose);
+            OnWorkerPoolMessage?.Invoke("Chunk length: " + mapper.ChunkPreferredLength + " records (remains " 
+                + mapper.ChunkRemainsLength + ")", LogLevel.Verbose);
             OnWorkerPoolMessage?.Invoke("Chunk count: " + mapper.ChunkCount, LogLevel.Info);
 
             while (mapper.Active)
@@ -103,6 +104,7 @@ namespace NetworkComputeFramework.Worker
 
                 // Assign chunk to worker
                 OnWorkerPoolMessage?.Invoke("Give chunk " + chunk.Id + " to " + worker + " (length: " + chunk.Data.Length + ")", LogLevel.Debug);
+                OnWorkerPoolMessage?.Invoke("Chunk " + chunk.Id + " real length: " + chunk.RealLength, LogLevel.Debug);
 
                 new Thread(new ParameterizedThreadStart(delegate (object data)
                 {

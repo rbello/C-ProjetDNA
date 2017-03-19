@@ -22,7 +22,6 @@ namespace NetworkComputeFramework.Worker
 
         public object Execute<T>(DataChunk<T> chunk, DataProcess<T> process)
         {
-            Thread.Sleep(5000);
             return process.CreateReducer().Reduce(chunk);
         }
 

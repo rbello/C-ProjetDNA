@@ -1,45 +1,46 @@
-﻿using NetworkComputeFramework.Data;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using NetworkComputeFramework.Data;
 
 namespace GenomicAnalysis
 {
-    public class GenomicDataReader : IDataReader<GenomicBase>
+    public class GenomicDataReader : IDataReader<GenomicNucleotidePeer>
     {
-        private string[] lines;
+        private string[] data;
 
         private int cursor;
 
         public long Length { get; private set; }
 
-        public GenomicDataReader(string[] lines)
+        public bool HasNext => cursor < Length;
+
+        public GenomicDataReader(string[] data)
         {
-            this.lines = lines;
+            this.data = data;
             this.cursor = 1;
-            Length = lines.Length - 1;
+            Length = data.Length - 1;
         }
 
-        public GenomicBase Next()
+        public GenomicNucleotidePeer Next()
         {
             lock (GetType()) {
-                return Parse(lines[cursor++]);
+                return Parse(data[cursor++]);
             }
         }
 
-        public static GenomicBase Parse(string data)
+        public static GenomicNucleotidePeer Parse(string data)
         {
             var tokens = data.Split('\t');
-            return new GenomicBase(tokens[0], tokens[1], long.Parse(tokens[2]), tokens[3]);
+            return new GenomicNucleotidePeer(tokens[0], tokens[1], long.Parse(tokens[2]), tokens[3]);
         }
 
-        public GenomicBase[] Next(int length)
+        public GenomicNucleotidePeer[] Next(int length)
         {
             lock (GetType())
             {
-                GenomicBase[] output = new GenomicBase[length];
+                GenomicNucleotidePeer[] output = new GenomicNucleotidePeer[length];
                 for (int i = 0; i < length; i++)
                 {
-                    output[i++] = Next();
+                    output[i] = Next();
                 }
                 return output;
             }
@@ -47,7 +48,7 @@ namespace GenomicAnalysis
 
         public void Dispose()
         {
-            lines = null;
+            data = null;
             cursor = -1;
             Length = 0;
         }

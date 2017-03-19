@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="GenomicAnalysisApplication.cs" />
     <Compile Include="GenomicDataLoader.cs" />
-    <Compile Include="GenomicBase.cs" />
+    <Compile Include="GenomicNucleotidePeer.cs" />
     <Compile Include="GenomicDataReader.cs" />
     <Compile Include="Process\CountBasesProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

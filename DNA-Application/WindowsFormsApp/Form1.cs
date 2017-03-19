@@ -47,7 +47,7 @@ namespace WindowsFormsApp
             try
             {
                 // Create server run mode
-                runMode = new ServerMode<string, GenomicBase>(app);
+                runMode = new ServerMode<string, GenomicNucleotidePeer>(app);
                 // Bind GUI on worker pool events
                 runMode.OnStateChanged += OnWorkStateChanged;
                 runMode.WorkerPool.OnNodeConnected += OnNodeConnected;
@@ -141,7 +141,7 @@ namespace WindowsFormsApp
             // Inverse button function
             startStopProcessingButton.Text = "Stop";
             // Load data and start processing distribution to cluster
-            ((ServerMode<string, GenomicBase>)runMode).Start(
+            ((ServerMode<string, GenomicNucleotidePeer>)runMode).Start(
                 // Success
                 delegate (object finalResult)
                 {

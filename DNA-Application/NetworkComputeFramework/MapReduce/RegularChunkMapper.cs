@@ -11,10 +11,10 @@ namespace NetworkComputeFramework.MapReduce
         public RegularChunkMapper(int chunkLength, IDataReader<T> dataSource)
         {
             DataSource = dataSource;
-            ChunkLength = chunkLength;
-            ChunkCount = (int)(DataSource.Length / ChunkLength);
-            ChunkRemains = (int)(DataLength - ChunkCount * ChunkLength);
-            if (ChunkRemains > 0) ChunkCount++;
+            ChunkPreferredLength = chunkLength;
+            ChunkCount = (int)(DataSource.Length / ChunkPreferredLength);
+            ChunkRemainsLength = (int)(DataLength - ChunkCount * ChunkPreferredLength);
+            if (ChunkRemainsLength > 0) ChunkCount++;
             chunks = new DataChunk<T>[ChunkCount];
         }
 
@@ -22,9 +22,9 @@ namespace NetworkComputeFramework.MapReduce
 
         public long DataLength => DataSource.Length;
 
-        public int ChunkLength { get; private set; }
+        public int ChunkPreferredLength { get; private set; }
 
-        public int ChunkRemains { get; private set; }
+        public int ChunkRemainsLength { get; private set; }
 
         public int ChunkCount { get; private set; }
 
@@ -47,7 +47,7 @@ namespace NetworkComputeFramework.MapReduce
         public void Dispose()
         {
             chunks = null;
-            ChunkLength = ChunkRemains = ChunkCount = 0;
+            ChunkPreferredLength = ChunkRemainsLength = ChunkCount = 0;
             DataSource = null;
         }
 
@@ -56,9 +56,9 @@ namespace NetworkComputeFramework.MapReduce
         {
             for (int i = 0; i < ChunkCount; ++i)
             {
-                yield return new DataChunk<T>(DataSource.Next(ChunkLength), i);
+                yield return new DataChunk<T>(DataSource.Next(ChunkPreferredLength), i);
             }
-            if (ChunkRemains > 0) yield return new DataChunk<T>(DataSource.Next(ChunkRemains), ChunkCount);
+            if (ChunkRemainsLength > 0) yield return new DataChunk<T>(DataSource.Next(ChunkRemainsLength), ChunkCount);
         }
 
         public DataChunk<T> NextChunk()
@@ -70,14 +70,21 @@ namespace NetworkComputeFramework.MapReduce
                 {
                     // If the chunk is available
                     if (chunks[i].State == ChunkState.Available) return chunks[i];
+                    // Else, continue to next chunk
                     continue;
                 }
                 // Else, load data and create chunk
-                chunks[i] = new DataChunk<T>(DataSource.Next(ChunkLength), i);
+                chunks[i] = new DataChunk<T>(DataSource.Next(ChunkLength(i)), i);
                 return chunks[i];
             }
+            // All chunks created and not available
             return null;
         }
 
+        private int ChunkLength(int chunkId)
+        {
+            if (ChunkRemainsLength == 0) return ChunkPreferredLength;
+            return chunkId == ChunkCount - 1 ? ChunkRemainsLength : ChunkPreferredLength;
+        }
     }
 }
