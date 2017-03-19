@@ -15,7 +15,7 @@ namespace GenomicAnalysis
         {
             switch (processTypeName)
             {
-                case "COUNT_BASES":  return new CountBasesProcess(dataReader);
+                case "COUNT_BASES":  return new StatsProcess(dataReader);
             }
             throw new ArgumentException(string.Format("Process type '{0}' is not supported by '{1}' application",
                 processTypeName, GetType().Name));
