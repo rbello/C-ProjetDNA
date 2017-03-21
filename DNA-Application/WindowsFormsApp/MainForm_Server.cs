@@ -16,16 +16,20 @@ namespace WindowsFormsApp
             // Disable UI
             SetEnabledUI(false, false);
             // Start server mode
-            AppendServerLog("Starting server on port:", serverPortSelector.Value);
             try
             {
                 // Create server run mode
-                serverMode = new ServerMode<string, GenomicNucleotidePeer>(app);
+                serverMode = new ServerMode<string, GenomicNucleotidePeer>(app, this.Log);
                 // Bind GUI on worker pool events
                 serverMode.OnStateChanged += OnWorkStateChanged;
                 serverMode.WorkerPool.OnNodeConnected += OnNodeConnected;
                 serverMode.WorkerPool.OnNodeDisconnected += OnNodeDisconnected;
                 serverMode.WorkerPool.OnWorkerPoolMessage += OnWorkerPoolMessage;
+                // Bind execution mode stop function to window closing
+                FormClosed += delegate (object sndr, FormClosedEventArgs evt)
+                {
+                    serverMode.Stop();
+                };
                 // Start server
                 serverMode.Init(
                     // On success

@@ -33,11 +33,6 @@ namespace NetworkComputeFramework.Node
 
         public bool Active => (ActiveWorkersCount > 0);
 
-        public void Init()
-        {
-            
-        }
-
         public override string ToString()
         {
             return "LocalNode [127.0.0.1]";

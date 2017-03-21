@@ -1,6 +1,9 @@
 ﻿using NetworkComputeFramework.Data;
+using NetworkComputeFramework.Net;
 using NetworkComputeFramework.Node;
 using System;
+using System.Net;
+using System.Net.Sockets;
 
 namespace NetworkComputeFramework.RunMode
 {
@@ -8,10 +11,11 @@ namespace NetworkComputeFramework.RunMode
     {
 
         protected IDataApplication<S, T> application;
+        private ServerSocket serverSocket;
 
         public DataProcess<T> CurrentProcess { get; private set; }
 
-        public ServerMode(IDataApplication<S, T> application) : base()
+        public ServerMode(IDataApplication<S, T> application, Action<string> logger) : base(logger)
         {
             this.application = application;
         }
@@ -25,14 +29,25 @@ namespace NetworkComputeFramework.RunMode
 
         private void CreateServerSocket(int portNumber)
         {
-
+            serverSocket = new ServerSocket(portNumber, Logger);
+            serverSocket.OnSocketError += delegate (Exception error, string source)
+            {
+                Logger.Invoke("Socket error " + error.GetType().Name + " from " + source + ": " + error.Message);
+            };
+            serverSocket.OnClientConnected += delegate (ClientSocket clientSocket)
+            {
+                Logger.Invoke("Client connected: " + clientSocket);
+            };
+            serverSocket.OnMessageReceived += delegate (ClientSocket clientSocket, string message)
+            {
+                Logger.Invoke("Message received from " + clientSocket + ": " + message);
+            };
+            serverSocket.Bind();
         }
 
         private void RunLocalNode(int localThreadsCount)
         {
-            var node = new LocalNode(localThreadsCount);
-            WorkerPool.AddNode(node);
-            node.Init();
+            WorkerPool.AddNode(new LocalNode(localThreadsCount));
         }
 
         protected override void StartSynch(Action<object> success, Action<Exception> failure, params object[] args)
@@ -71,6 +86,7 @@ namespace NetworkComputeFramework.RunMode
             {
                 CurrentProcess.Interrupted = true;
             }
+            serverSocket.Dispose();
         }
     }
 }

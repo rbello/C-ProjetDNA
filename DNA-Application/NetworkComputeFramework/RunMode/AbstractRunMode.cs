@@ -18,8 +18,11 @@ namespace NetworkComputeFramework.RunMode
 
         public Exception LastException { get; protected set; }
 
-        public AbstractRunMode()
+        public Action<string> Logger { get; private set; }
+
+        public AbstractRunMode(Action<string> logger)
         {
+            Logger = logger;
             WorkerPool = new WorkerPool(this.ChangeState);
         }
 

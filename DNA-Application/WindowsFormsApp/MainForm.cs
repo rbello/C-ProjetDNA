@@ -3,8 +3,6 @@ using NetworkComputeFramework.RunMode;
 using System;
 using System.Threading;
 using System.Windows.Forms;
-using NetworkComputeFramework.Node;
-using NetworkComputeFramework.Worker;
 
 namespace WindowsFormsApp
 {
@@ -51,6 +49,11 @@ namespace WindowsFormsApp
         private void githubSourcesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/rbello/C-ProjetDNA");
+        }
+
+        private void Log(string message)
+        {
+            AppendServerLog(message);
         }
 
         private void AppendServerLog(params object[] message)
