@@ -1,21 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using NetworkComputeFramework.Net;
 using NetworkComputeFramework.Worker;
 
 namespace NetworkComputeFramework.Node
 {
     public class RemoteNode : INode
     {
-        public IList<IWorker> Workers => throw new NotImplementedException();
+        private ClientSocket clientSocket;
 
-        public string Address => throw new NotImplementedException();
+        public RemoteNode(ClientSocket clientSocket)
+        {
+            this.clientSocket = clientSocket;
+            Workers = new List<IWorker>();
+        }
 
-        public float CpuUsage => throw new NotImplementedException();
+        public IList<IWorker> Workers { get; protected set; }
 
-        public float MemoryUsage => throw new NotImplementedException();
+        public string Address => clientSocket.RemoteSocket.RemoteEndPoint.ToString();
 
-        public int ActiveWorkersCount => throw new NotImplementedException();
+        public float CpuUsage => 0;
 
-        public bool Active => throw new NotImplementedException();
+        public float MemoryUsage => 0;
+
+        public int ActiveWorkersCount => 0;
+
+        public bool Active => false;
+
+        public override string ToString()
+        {
+            return "RemoteNode [" + Address + "]";
+        }
     }
 }
