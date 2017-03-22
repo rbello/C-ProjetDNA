@@ -2,8 +2,6 @@
 using NetworkComputeFramework.Net;
 using NetworkComputeFramework.Node;
 using System;
-using System.Net;
-using System.Net.Sockets;
 
 namespace NetworkComputeFramework.RunMode
 {
@@ -11,6 +9,7 @@ namespace NetworkComputeFramework.RunMode
     {
 
         protected IDataApplication<S, T> application;
+
         private ServerSocket serverSocket;
 
         public DataProcess<T> CurrentProcess { get; private set; }
@@ -37,6 +36,8 @@ namespace NetworkComputeFramework.RunMode
             serverSocket.OnClientConnected += delegate (ClientSocket clientSocket)
             {
                 Logger.Invoke("Client connected: " + clientSocket);
+                var node = new RemoteNode(clientSocket);
+                WorkerPool.AddNode(node);
             };
             serverSocket.OnMessageReceived += delegate (ClientSocket clientSocket, string message)
             {
@@ -54,11 +55,14 @@ namespace NetworkComputeFramework.RunMode
         {
             // Change run mode state
             ChangeState(RunState.LOAD_BEGIN);
+
             // Open data source
             IDataLoader<S, T> loader = application.CreateDataLoader();
             IDataReader<T> reader = loader.Open((S) args[0]);
+
             // Create the process
             CurrentProcess = application.CreateProcess((string)args[1], reader);
+
             // Run the process into the workers' pool
             WorkerPool.Process(
                 // Process to execute
