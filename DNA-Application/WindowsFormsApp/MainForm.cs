@@ -58,10 +58,17 @@ namespace WindowsFormsApp
 
         private void AppendServerLog(params object[] message)
         {
-            if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendServerLog(message); }));
-            else
-                processingOutputLog.AppendText(string.Join(" ", message) + Environment.NewLine);
+            try
+            {
+                if (InvokeRequired)
+                    Invoke(new ThreadStart(delegate { AppendServerLog(message); }));
+                else
+                    processingOutputLog.AppendText(string.Join(" ", message) + Environment.NewLine);
+            }
+            catch
+            {
+                return;
+            }
         }
 
         private void SetControlEnabled(Control ctrl, bool enabled)
