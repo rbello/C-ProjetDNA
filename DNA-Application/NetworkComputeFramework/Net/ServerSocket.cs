@@ -27,6 +27,7 @@ namespace NetworkComputeFramework.Net
         internal ManualResetEvent allDone = new ManualResetEvent(false);
 
         internal IList<ClientSocket> clients;
+        private Thread thread;
 
         public ServerSocket(int portNumber, Action<string> logger = null)
         {
@@ -41,6 +42,15 @@ namespace NetworkComputeFramework.Net
         }
 
         public void Bind()
+        {
+            thread = new Thread(delegate ()
+            {
+                BindSynch();
+            });
+            thread.Start();
+        }
+
+        public void BindSynch()
         {
             Log("Preparing to open port " + LocalAddress + ":" + LocalPort);
             try
@@ -57,7 +67,6 @@ namespace NetworkComputeFramework.Net
                     allDone.Reset();
 
                     // Start an asynchronous socket to listen for connections
-                    Log("Waiting for a connection...");
                     LocalSocket.BeginAccept(new AsyncCallback(AcceptCallback), LocalSocket);
 
                     // Wait until a connection is made before continuing
@@ -93,7 +102,7 @@ namespace NetworkComputeFramework.Net
                 Socket client = listener.EndAccept(ar);
 
                 // Create the state object
-                ClientSocket state = new ClientSocket(this, client);
+                var state = new ClientSocket(this, client);
 
                 // Save client reference
                 clients.Add(state);
@@ -102,8 +111,10 @@ namespace NetworkComputeFramework.Net
                 if (!IsDisposed) OnClientConnected?.Invoke(state);
 
                 // Enable receive
-                client.BeginReceive(state.buffer, 0, ClientSocket.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
+                //client.BeginReceive(state.buffer, 0, ClientSocket.BufferSize, 0,
+                //    new AsyncCallback(ReadCallback), state);
+
+                state.StartReceive();
 
             }
             catch (Exception ex)
@@ -121,6 +132,9 @@ namespace NetworkComputeFramework.Net
             ClientSocket state = (ClientSocket)ar.AsyncState;
             Socket handler = state.RemoteSocket;
 
+            // Socket is disposed
+            if (handler == null) return;
+
             // Read data from the client socket
             int bytesRead = handler.EndReceive(ar);
 
@@ -131,6 +145,7 @@ namespace NetworkComputeFramework.Net
 
                 // Check for end-of-file tag. If it is not there, read more data
                 content = state.sb.ToString();
+
                 if (content.IndexOf(EOF) > -1)
                 {
                     // All the data has been read from the client. Display it on the logger
@@ -146,6 +161,8 @@ namespace NetworkComputeFramework.Net
                         new AsyncCallback(ReadCallback), state);
                 }
             }
+
+            
         }
 
         internal void SendCallback(IAsyncResult ar)
@@ -182,6 +199,10 @@ namespace NetworkComputeFramework.Net
             LocalSocket = null;
         }
 
+        internal void MessageReceived(ClientSocket clientSocket, string content)
+        {
+            OnMessageReceived?.Invoke(clientSocket, content);
+        }
     }
 
     // State object for reading client data asynchronously
@@ -199,6 +220,8 @@ namespace NetworkComputeFramework.Net
 
         // Received data string
         public StringBuilder sb = new StringBuilder();
+
+        internal bool Active = true;
 
         // Constructor
         public ClientSocket(ServerSocket serverSocket, Socket clientSocket)
@@ -222,14 +245,36 @@ namespace NetworkComputeFramework.Net
 
         public override string ToString()
         {
-            return "Client[" + RemoteSocket + "]"; // TODO: display address only
+            return "Client[" + RemoteSocket.RemoteEndPoint.ToString() + "]";
         }
 
         internal void Dispose()
         {
+            Active = false;
             RemoteSocket.Close();
             RemoteSocket.Dispose();
             RemoteSocket = null;
+        }
+
+        internal void StartReceive()
+        {
+            new Thread(delegate ()
+            {
+                try
+                {
+                    while (Active)
+                    {
+                        byte[] bytes = new byte[1024];
+                        int bytesRec = RemoteSocket.Receive(bytes);
+                        string content = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                        LocalSocket.MessageReceived(this, content);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace); // TODO:
+                }
+            }).Start();
         }
     }
 
