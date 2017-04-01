@@ -2,8 +2,21 @@
 using System.Collections.Generic;
 using NetworkComputeFramework.Data;
 
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.MapReduce
 {
+
+    /// <summary>
+    /// A simple chunk mapper, dividing data as fixed-length chunks.
+    /// </summary>
+    /// <typeparam name="T">Type of the unitary data chunked</typeparam>
     public class RegularChunkMapper<T> : IMapper<T>
     {
         private DataChunk<T>[] chunks;

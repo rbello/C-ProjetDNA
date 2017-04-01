@@ -1,10 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NetworkComputeFramework.Net;
 using NetworkComputeFramework.Worker;
 
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.Node
 {
+
+    /// <summary>
+    /// A node connected through the network.
+    /// </summary>
     public class RemoteNode : INode
     {
         private ClientSocket clientSocket;
@@ -27,9 +38,7 @@ namespace NetworkComputeFramework.Node
 
         public bool Active => false;
 
-        public override string ToString()
-        {
-            return "RemoteNode [" + Address + "]";
-        }
+        public override string ToString() => "RemoteNode [" + Address + "]";
+
     }
 }

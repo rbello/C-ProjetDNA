@@ -3,10 +3,23 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.Node
 {
+
+    /// <summary>
+    /// A local node, running on this computer.
+    /// </summary>
     public class LocalNode : INode
     {
+
         private PerformanceCounter cpuCounter;
         private PerformanceCounter ramCounter;
 
@@ -33,9 +46,7 @@ namespace NetworkComputeFramework.Node
 
         public bool Active => (ActiveWorkersCount > 0);
 
-        public override string ToString()
-        {
-            return "LocalNode [127.0.0.1]";
-        }
+        public override string ToString() => "LocalNode [127.0.0.1]";
+
     }
 }

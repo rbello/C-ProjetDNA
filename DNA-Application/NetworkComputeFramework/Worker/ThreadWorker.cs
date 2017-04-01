@@ -1,9 +1,20 @@
 ﻿using NetworkComputeFramework.Node;
-using System.Threading;
 using NetworkComputeFramework.Data;
 
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.Worker
 {
+
+    /// <summary>
+    /// A simple worker intended to execute process on data chunk synchronously.
+    /// </summary>
     public class ThreadWorker : IWorker
     {
 

@@ -5,9 +5,21 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-// See: https://msdn.microsoft.com/fr-fr/library/fx6588te(v=vs.110).aspx
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.Net
 {
+    /// <summary>
+    /// A server socket, able to accept connections of remote workers.
+    /// 
+    /// See: https://msdn.microsoft.com/fr-fr/library/fx6588te(v=vs.110).aspx
+    /// </summary>
     public class ServerSocket : IDisposable
     {
         internal static readonly string EOF = "<EOF>";

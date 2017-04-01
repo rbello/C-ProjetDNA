@@ -3,8 +3,23 @@ using NetworkComputeFramework.Net;
 using NetworkComputeFramework.Node;
 using System;
 
+/// ██████╗ ███╗   ██╗ █████╗     ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗
+/// ██╔══██╗████╗  ██║██╔══██╗    ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝
+/// ██║  ██║██╔██╗ ██║███████║    ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   
+/// ██║  ██║██║╚██╗██║██╔══██║    ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   
+/// ██████╔╝██║ ╚████║██║  ██║    ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   
+/// ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝  
+/// 
+/// Copyleft 2017 https://github.com/rbello/C-ProjetDNA
 namespace NetworkComputeFramework.RunMode
 {
+
+    /// <summary>
+    /// Implementation of a server application, able to accept remote connections from
+    /// remote nodes over the network, and to distribute the data process.
+    /// </summary>
+    /// <typeparam name="S">Type of the input object giving the location of the data to process</typeparam>
+    /// <typeparam name="T">Type of the unitary data processed</typeparam>
     public class ServerMode<S, T> : AbstractRunMode
     {
 
