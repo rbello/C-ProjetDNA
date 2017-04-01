@@ -33,17 +33,17 @@ namespace NetworkComputeFramework.Net
         public bool IsDisposed { get; private set; }
 
         public event Action<Exception, string> OnSocketError;
-        public event Action<ClientSocket> OnClientConnected;
-        public event Action<ClientSocket, string> OnMessageReceived;
+        public event Action<Client> OnClientConnected;
+        public event Action<Client, string> OnMessageReceived;
 
         internal ManualResetEvent allDone = new ManualResetEvent(false);
 
-        internal IList<ClientSocket> clients;
+        internal IList<Client> clients;
         private Thread thread;
 
         public ServerSocket(int portNumber, Action<string> logger = null)
         {
-            clients = new List<ClientSocket>();
+            clients = new List<Client>();
             LocalPort = portNumber;
             Logger = logger;
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
@@ -92,7 +92,7 @@ namespace NetworkComputeFramework.Net
             }
         }
 
-        public void Send(ClientSocket clientSocket, string data)
+        public void Send(Client clientSocket, string data)
         {
             clientSocket.Send(data);
         }
@@ -114,13 +114,16 @@ namespace NetworkComputeFramework.Net
                 Socket client = listener.EndAccept(ar);
 
                 // Create the state object
-                var state = new ClientSocket(this, client);
+                var state = new Client(this, client);
 
                 // Save client reference
                 clients.Add(state);
 
                 // Send event
                 if (!IsDisposed) OnClientConnected?.Invoke(state);
+
+                // Log
+                Log("New client connected:" + state);
 
                 // Enable receive
                 //client.BeginReceive(state.buffer, 0, ClientSocket.BufferSize, 0,
@@ -141,7 +144,7 @@ namespace NetworkComputeFramework.Net
 
             // Retrieve the state object and the handler socket
             // from the asynchronous state object
-            ClientSocket state = (ClientSocket)ar.AsyncState;
+            Client state = (Client)ar.AsyncState;
             Socket handler = state.RemoteSocket;
 
             // Socket is disposed
@@ -169,7 +172,7 @@ namespace NetworkComputeFramework.Net
                 else
                 {
                     // Not all data received. Get more
-                    handler.BeginReceive(state.buffer, 0, ClientSocket.BufferSize, 0,
+                    handler.BeginReceive(state.buffer, 0, Client.BufferSize, 0,
                         new AsyncCallback(ReadCallback), state);
                 }
             }
@@ -203,7 +206,7 @@ namespace NetworkComputeFramework.Net
             IsDisposed = true;
             Logger = null;
             // Close clients
-            foreach (ClientSocket client in clients) {
+            foreach (Client client in clients) {
                 client.Dispose();
             }
             LocalSocket.Close();
@@ -211,14 +214,19 @@ namespace NetworkComputeFramework.Net
             LocalSocket = null;
         }
 
-        internal void MessageReceived(ClientSocket clientSocket, string content)
+        internal void MessageReceived(Client clientSocket, string content)
         {
             OnMessageReceived?.Invoke(clientSocket, content);
+        }
+
+        public void SendAll(string message, Action<Exception> callback)
+        {
+            //TODO: Implements SendAll
         }
     }
 
     // State object for reading client data asynchronously
-    public class ClientSocket
+    public class Client
     {
         // Sockets
         public ServerSocket LocalSocket { get; private set; }
@@ -236,7 +244,7 @@ namespace NetworkComputeFramework.Net
         internal bool Active = true;
 
         // Constructor
-        public ClientSocket(ServerSocket serverSocket, Socket clientSocket)
+        public Client(ServerSocket serverSocket, Socket clientSocket)
         {
             LocalSocket = serverSocket;
             RemoteSocket = clientSocket;

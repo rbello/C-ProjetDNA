@@ -45,6 +45,7 @@
     <Compile Include="MapReduce\IReducer.cs" />
     <Compile Include="MapReduce\RegularChunkMapper.cs" />
     <Compile Include="Net\ServerSocket.cs" />
+    <Compile Include="Net\ClientSocket.cs" />
     <Compile Include="Node\RemoteNode.cs" />
     <Compile Include="Worker\IWorker.cs" />
     <Compile Include="RunMode\AbstractRunMode.cs" />

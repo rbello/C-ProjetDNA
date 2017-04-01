@@ -18,9 +18,9 @@ namespace NetworkComputeFramework.Node
     /// </summary>
     public class RemoteNode : INode
     {
-        private ClientSocket clientSocket;
+        private Client clientSocket;
 
-        public RemoteNode(ClientSocket clientSocket)
+        public RemoteNode(Client clientSocket)
         {
             this.clientSocket = clientSocket;
             Workers = new List<IWorker>();

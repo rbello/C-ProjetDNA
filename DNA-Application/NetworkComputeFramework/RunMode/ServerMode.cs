@@ -48,13 +48,13 @@ namespace NetworkComputeFramework.RunMode
             {
                 Logger.Invoke("Socket error " + error.GetType().Name + " from " + source + ": " + error.Message);
             };
-            serverSocket.OnClientConnected += delegate (ClientSocket clientSocket)
+            serverSocket.OnClientConnected += delegate (Client clientSocket)
             {
                 Logger.Invoke("Client connected: " + clientSocket);
                 var node = new RemoteNode(clientSocket);
                 WorkerPool.AddNode(node);
             };
-            serverSocket.OnMessageReceived += delegate (ClientSocket clientSocket, string message)
+            serverSocket.OnMessageReceived += delegate (Client clientSocket, string message)
             {
                 Logger.Invoke("Message received from " + clientSocket + ": " + message);
             };

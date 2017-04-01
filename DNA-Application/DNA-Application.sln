@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenomicAnalysisBusiness", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkComputeFramework", "NetworkComputeFramework\NetworkComputeFramework.csproj", "{EA564DF3-DA36-47A2-8916-065DAD11644F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketTestForm", "SocketTestForm\SocketTestForm.csproj", "{1AF5BEF8-2E77-45D4-AF81-7126C5CEC880}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EA564DF3-DA36-47A2-8916-065DAD11644F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA564DF3-DA36-47A2-8916-065DAD11644F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA564DF3-DA36-47A2-8916-065DAD11644F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF5BEF8-2E77-45D4-AF81-7126C5CEC880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF5BEF8-2E77-45D4-AF81-7126C5CEC880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF5BEF8-2E77-45D4-AF81-7126C5CEC880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF5BEF8-2E77-45D4-AF81-7126C5CEC880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
