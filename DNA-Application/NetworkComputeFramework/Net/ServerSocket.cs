@@ -16,7 +16,7 @@ using System.Threading;
 namespace NetworkComputeFramework.Net
 {
     /// <summary>
-    /// A server socket, able to accept connections of remote workers.
+    /// A server socket, able to accept connections of remote peers.
     /// 
     /// See: https://msdn.microsoft.com/fr-fr/library/fx6588te(v=vs.110).aspx
     /// </summary>
